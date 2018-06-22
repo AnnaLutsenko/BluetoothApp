@@ -27,6 +27,7 @@ class PeripheralConnectedViewController: UIViewController, StoryboardInstance {
     //
     var arrayReadWriteChar = [CBCharacteristic]()
     //
+    let CRC = CRC16.instance
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -61,10 +62,28 @@ class PeripheralConnectedViewController: UIViewController, StoryboardInstance {
             
             //write a value to the characteristic
             
-            let nsData = NSData(bytes: [0x00, 0x00, 0x00, 0x00, 0x00, 0x00], length: 6)
-            let data = nsData as Data
+            let data = [UInt8]([0x00, 0x01])
+            let data2 = [UInt8]([0x00, 0x01, 0xff, 0xff, 0x01, 0x02, 0x03, 0x00])
             
-            peripheral.writeValue(data,  for: arrayReadWriteChar[0], type: .withoutResponse)
+            let arcValue = CRC.crc16(data, type: .ARC)
+            let modbusValue = CRC.crc16(data, type: .MODBUS)
+            let modbusVal2 = CRC.crc16(data2, type: .MODBUS)
+            
+            if arcValue != nil && modbusValue != nil {
+                
+                let arcStr = String(format: "0x%4X", arcValue!)
+                let modbusStr = String(format: "0x%4X", modbusValue!)
+                
+                let modbusStr2 = String(format: "0x%4X", modbusVal2!)
+                print("CRCs: ARC = " + arcStr + " MODBUS = " + modbusStr)
+                print(" MODBUS 2 = " + modbusStr2)
+            }
+            
+            let dataToSend = [0x00, 0x01, modbusValue]
+            let nsData = NSData(bytes: dataToSend, length: 10) as Data
+            
+            
+            peripheral.writeValue(nsData,  for: arrayReadWriteChar[0], type: .withoutResponse)
             
         } else {
             print("Not connected")

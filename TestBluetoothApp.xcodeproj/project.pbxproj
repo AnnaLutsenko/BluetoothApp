@@ -17,6 +17,7 @@
 		951F2CC020D950B400222247 /* UIAlertController+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 951F2CBF20D950B400222247 /* UIAlertController+Ext.swift */; };
 		951F2CC320DA775300222247 /* PeripheralConnectedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 951F2CC220DA775300222247 /* PeripheralConnectedViewController.swift */; };
 		951F2CC520DA931A00222247 /* StoryboardInstance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 951F2CC420DA931A00222247 /* StoryboardInstance.swift */; };
+		95A6567B20DD26710041BFAF /* CRC16.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95A6567A20DD26710041BFAF /* CRC16.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +33,7 @@
 		951F2CBF20D950B400222247 /* UIAlertController+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIAlertController+Ext.swift"; sourceTree = "<group>"; };
 		951F2CC220DA775300222247 /* PeripheralConnectedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeripheralConnectedViewController.swift; sourceTree = "<group>"; };
 		951F2CC420DA931A00222247 /* StoryboardInstance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryboardInstance.swift; sourceTree = "<group>"; };
+		95A6567A20DD26710041BFAF /* CRC16.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CRC16.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,6 +71,7 @@
 				951F2CBD20D94C4300222247 /* Custom UI */,
 				951F2CC120DA704800222247 /* Controllers */,
 				951F2CA520D91D7500222247 /* AppDelegate.swift */,
+				95A6567A20DD26710041BFAF /* CRC16.swift */,
 				951F2CA920D91D7500222247 /* Main.storyboard */,
 				951F2CAC20D91D7800222247 /* Assets.xcassets */,
 				951F2CAE20D91D7800222247 /* LaunchScreen.storyboard */,
@@ -187,6 +190,7 @@
 				951F2CBC20D935FC00222247 /* UIColor+Ext.swift in Sources */,
 				951F2CBA20D9356500222247 /* ScanButton.swift in Sources */,
 				951F2CC520DA931A00222247 /* StoryboardInstance.swift in Sources */,
+				95A6567B20DD26710041BFAF /* CRC16.swift in Sources */,
 				951F2CC320DA775300222247 /* PeripheralConnectedViewController.swift in Sources */,
 				951F2CB820D91DF700222247 /* PeripheralsViewController.swift in Sources */,
 			);
