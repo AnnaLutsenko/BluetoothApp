@@ -46,4 +46,24 @@ class CRC16 {
         }
         return accumulator
     }
+    
+    // GET HEX from bytes in UInt8
+    func bytesConvertToHexString(_ bytes: [UInt8]) -> String {
+        var string = ""
+        
+        for val in bytes {
+            //getBytes(&byte, range: NSMakeRange(i, 1))
+            string = string + String(format: "%02X", val)
+        }
+        
+        return string
+    }
+    
+    // GET UInt16 from two bytes UInt8
+    func bytesConvertToUInt16(_ bytes: [UInt8]) -> UInt16 {
+        let u16 = UnsafePointer(bytes).withMemoryRebound(to: UInt16.self, capacity: 1) {
+            $0.pointee
+        }
+        return u16
+    }
 }

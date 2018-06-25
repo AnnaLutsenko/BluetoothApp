@@ -55,34 +55,25 @@ class PeripheralConnectedViewController: UIViewController, StoryboardInstance {
     @IBAction func writeValue() {
         writeDataTF.resignFirstResponder()
         
-//        guard let text = writeDataTF.text,
-//            let data = text.data(using: .utf8) else { return }
+        //        guard let text = writeDataTF.text,
+        //            let data = text.data(using: .utf8) else { return }
         
         if peripheral.state == .connected {
             
-            //write a value to the characteristic
+            //WRITE a value to the characteristic
             
             let data = [UInt8]([0x00, 0x01])
-            let data2 = [UInt8]([0x00, 0x01, 0xff, 0xff, 0x01, 0x02, 0x03, 0x00])
+            let dataInCRC16 = CRC.crc16(data, type: .MODBUS)
             
-            let arcValue = CRC.crc16(data, type: .ARC)
-            let modbusValue = CRC.crc16(data, type: .MODBUS)
-            let modbusVal2 = CRC.crc16(data2, type: .MODBUS)
-            
-            if arcValue != nil && modbusValue != nil {
-                
-                let arcStr = String(format: "0x%4X", arcValue!)
-                let modbusStr = String(format: "0x%4X", modbusValue!)
-                
-                let modbusStr2 = String(format: "0x%4X", modbusVal2!)
-                print("CRCs: ARC = " + arcStr + " MODBUS = " + modbusStr)
-                print(" MODBUS 2 = " + modbusStr2)
+            if dataInCRC16 != nil {
+                let modbusStr = String(format: "0x%4X", dataInCRC16!)
+                print(" MODBUS = " + modbusStr)
             }
-            
-            let dataToSend = [0x00, 0x01, modbusValue]
-            let nsData = NSData(bytes: dataToSend, length: 10) as Data
-            
-            
+            guard let crc16InUInt8 = dataInCRC16?.convertToUInt8() else {return}
+            //
+            let dataToSend = [0x00, 0x01, crc16InUInt8[0], crc16InUInt8[1]]
+            let nsData = NSData(bytes: dataToSend, length: dataToSend.count) as Data
+            //
             peripheral.writeValue(nsData,  for: arrayReadWriteChar[0], type: .withoutResponse)
             
         } else {
@@ -101,15 +92,9 @@ extension PeripheralConnectedViewController: CBPeripheralDelegate {
             print(err.localizedDescription)
         }
         
-        if let rxData = characteristic.value {
-            
-            let numberOfBytes = rxData.count
-            var rxByteArray = [UInt8](repeating: 0, count: numberOfBytes)
-            (rxData as NSData).getBytes(&rxByteArray, length: numberOfBytes)
-            print(rxByteArray)
-            
-            let value = [UInt8](rxData)
-            print(value)    //whole array
+        if let data = characteristic.value {
+            let value = [UInt8](data)
+            print("did Write Value: \(value)")    //whole array
         }
     }
     
@@ -126,8 +111,33 @@ extension PeripheralConnectedViewController: CBPeripheralDelegate {
             (value as NSData).getBytes(&rxByteArray, length: numberOfBytes)
             print(rxByteArray)
             
+            // READ Value
             let val = [UInt8](value)
             print(val)
+            //
+            
+            if val.count >= 10 {
+                print("Data in HEX \(CRC.bytesConvertToHexString(val))")
+                //
+                let hexValCommand = CRC.bytesConvertToHexString([val[0], val[1]])
+                let hexValueNumber = CRC.bytesConvertToHexString([val[2], val[3]])
+                let hexValVersionFW = CRC.bytesConvertToHexString([val[4], val[5]])
+                let hexValVersionHW = CRC.bytesConvertToHexString([val[6], val[7]])
+                let hexValCRC16 = CRC.bytesConvertToHexString([val[8], val[9]])
+                //
+                let data = Array(val.prefix(value.count-2))
+                let modbusValue = CRC.crc16(data, type: .MODBUS)
+                //
+                if CRC.bytesConvertToHexString([val[8], val[9]]) == CRC.bytesConvertToHexString((modbusValue?.convertToUInt8())!) {
+                    print("CRC are equal")
+                }
+                //
+                print("HEX command = \(hexValCommand)")
+                print("HEX serial number = \(hexValueNumber)")
+                print("HEX version FW = \(hexValVersionFW)")
+                print("HEX version HW = \(hexValVersionHW)")
+                print("HEX CRC16= \(hexValCRC16)")
+            }
         }
     }
     
@@ -151,7 +161,7 @@ extension PeripheralConnectedViewController: CBPeripheralDelegate {
                 //
                 peripheral.setNotifyValue(true, for: characteristic)
                 arrayReadWriteChar.append(characteristic)
-                peripheral.readValue(for: characteristic)
+                //peripheral.readValue(for: characteristic)
             }
         }
         

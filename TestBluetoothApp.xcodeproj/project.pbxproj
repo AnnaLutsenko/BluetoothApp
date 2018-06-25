@@ -18,6 +18,7 @@
 		951F2CC320DA775300222247 /* PeripheralConnectedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 951F2CC220DA775300222247 /* PeripheralConnectedViewController.swift */; };
 		951F2CC520DA931A00222247 /* StoryboardInstance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 951F2CC420DA931A00222247 /* StoryboardInstance.swift */; };
 		95A6567B20DD26710041BFAF /* CRC16.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95A6567A20DD26710041BFAF /* CRC16.swift */; };
+		95A6567D20E0CB4B0041BFAF /* UInt16+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95A6567C20E0CB4B0041BFAF /* UInt16+Ext.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +35,7 @@
 		951F2CC220DA775300222247 /* PeripheralConnectedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeripheralConnectedViewController.swift; sourceTree = "<group>"; };
 		951F2CC420DA931A00222247 /* StoryboardInstance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryboardInstance.swift; sourceTree = "<group>"; };
 		95A6567A20DD26710041BFAF /* CRC16.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CRC16.swift; sourceTree = "<group>"; };
+		95A6567C20E0CB4B0041BFAF /* UInt16+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UInt16+Ext.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -93,6 +95,7 @@
 			children = (
 				951F2CBB20D935FC00222247 /* UIColor+Ext.swift */,
 				951F2CBF20D950B400222247 /* UIAlertController+Ext.swift */,
+				95A6567C20E0CB4B0041BFAF /* UInt16+Ext.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -189,6 +192,7 @@
 				951F2CC020D950B400222247 /* UIAlertController+Ext.swift in Sources */,
 				951F2CBC20D935FC00222247 /* UIColor+Ext.swift in Sources */,
 				951F2CBA20D9356500222247 /* ScanButton.swift in Sources */,
+				95A6567D20E0CB4B0041BFAF /* UInt16+Ext.swift in Sources */,
 				951F2CC520DA931A00222247 /* StoryboardInstance.swift in Sources */,
 				95A6567B20DD26710041BFAF /* CRC16.swift in Sources */,
 				951F2CC320DA775300222247 /* PeripheralConnectedViewController.swift in Sources */,
