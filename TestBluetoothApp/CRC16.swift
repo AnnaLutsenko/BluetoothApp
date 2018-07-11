@@ -59,11 +59,11 @@ class CRC16 {
         return string
     }
     
-    // GET UInt16 from two bytes UInt8
-    func bytesConvertToUInt16(_ bytes: [UInt8]) -> UInt16 {
+    // GET Int16 from two bytes UInt8
+    func bytesConvertToInt16(_ bytes: [UInt8]) -> UInt16 {
         let u16 = UnsafePointer(bytes).withMemoryRebound(to: UInt16.self, capacity: 1) {
             $0.pointee
         }
-        return u16
+        return u16.bigEndian
     }
 }
