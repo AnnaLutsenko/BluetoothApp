@@ -26,6 +26,7 @@ class PeripheralConnectedViewController: UIViewController, StoryboardInstance {
     var arrayReadWriteChar = [CBCharacteristic]()
     //
     let CRC = CRC16.instance
+    let firmwareManager = FirmwareManager()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,6 +40,8 @@ class PeripheralConnectedViewController: UIViewController, StoryboardInstance {
         centralManager?.connect(peripheral, options: nil)
         //
         rssiReloadTimer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(refreshRSSI), userInfo: nil, repeats: true)
+        //
+        getNewFirmware()
     }
     
     func storyboardInstance() {
@@ -47,6 +50,14 @@ class PeripheralConnectedViewController: UIViewController, StoryboardInstance {
     
     @objc private func refreshRSSI(){
         peripheral.readRSSI()
+    }
+    
+    func getNewFirmware() {
+        firmwareManager.getFirmware(success: { _ in
+            print("Successfull getting firmware!")
+        }) { (error) in
+            print(error.localizedDescription)
+        }
     }
     
     func isDeviceConnected() -> Bool {
@@ -65,6 +76,7 @@ class PeripheralConnectedViewController: UIViewController, StoryboardInstance {
         writeValueToPeripheral(data)
     }
     
+    /// Чтение ID установленных звуковых пакетов (8)
     func readIDSounds() {
         let data = [UInt8]([0x00, 0x47])
         writeValueToPeripheral(data)

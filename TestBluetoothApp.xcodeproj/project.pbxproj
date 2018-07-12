@@ -19,6 +19,8 @@
 		951F2CC520DA931A00222247 /* StoryboardInstance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 951F2CC420DA931A00222247 /* StoryboardInstance.swift */; };
 		95A6567B20DD26710041BFAF /* CRC16.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95A6567A20DD26710041BFAF /* CRC16.swift */; };
 		95A6567D20E0CB4B0041BFAF /* UInt16+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95A6567C20E0CB4B0041BFAF /* UInt16+Ext.swift */; };
+		95B75D2B20F76BD700F7473D /* FirmwareManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95B75D2A20F76BD700F7473D /* FirmwareManager.swift */; };
+		95B75D2E20F7919A00F7473D /* ErrorHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95B75D2D20F7919A00F7473D /* ErrorHandler.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,6 +38,8 @@
 		951F2CC420DA931A00222247 /* StoryboardInstance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryboardInstance.swift; sourceTree = "<group>"; };
 		95A6567A20DD26710041BFAF /* CRC16.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CRC16.swift; sourceTree = "<group>"; };
 		95A6567C20E0CB4B0041BFAF /* UInt16+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UInt16+Ext.swift"; sourceTree = "<group>"; };
+		95B75D2A20F76BD700F7473D /* FirmwareManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirmwareManager.swift; sourceTree = "<group>"; };
+		95B75D2D20F7919A00F7473D /* ErrorHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorHandler.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,6 +74,7 @@
 			children = (
 				951F2CBE20D94C5800222247 /* Extensions */,
 				951F2CC620DA933000222247 /* Protocols */,
+				95B75D2C20F76BE600F7473D /* Managers */,
 				951F2CBD20D94C4300222247 /* Custom UI */,
 				951F2CC120DA704800222247 /* Controllers */,
 				951F2CA520D91D7500222247 /* AppDelegate.swift */,
@@ -115,6 +120,15 @@
 				951F2CC420DA931A00222247 /* StoryboardInstance.swift */,
 			);
 			path = Protocols;
+			sourceTree = "<group>";
+		};
+		95B75D2C20F76BE600F7473D /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				95B75D2D20F7919A00F7473D /* ErrorHandler.swift */,
+				95B75D2A20F76BD700F7473D /* FirmwareManager.swift */,
+			);
+			path = Managers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -190,7 +204,9 @@
 			files = (
 				951F2CA620D91D7500222247 /* AppDelegate.swift in Sources */,
 				951F2CC020D950B400222247 /* UIAlertController+Ext.swift in Sources */,
+				95B75D2B20F76BD700F7473D /* FirmwareManager.swift in Sources */,
 				951F2CBC20D935FC00222247 /* UIColor+Ext.swift in Sources */,
+				95B75D2E20F7919A00F7473D /* ErrorHandler.swift in Sources */,
 				951F2CBA20D9356500222247 /* ScanButton.swift in Sources */,
 				95A6567D20E0CB4B0041BFAF /* UInt16+Ext.swift in Sources */,
 				951F2CC520DA931A00222247 /* StoryboardInstance.swift in Sources */,
