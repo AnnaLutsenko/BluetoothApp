@@ -10,6 +10,7 @@ import Foundation
 
 protocol CommandResponse {
     init(from data: Data)
+    func parseData(_ data: Data)
 }
 
 protocol CommandProtocol {
@@ -17,3 +18,10 @@ protocol CommandProtocol {
     var data: Data { get }
 }
 
+extension CommandResponse {
+    
+    func parseData(_ data: Data) {
+        let bytes = [UInt8](data)
+        print("\(self) in HEX: \(CRC16.bytesConvertToHexString(bytes))")
+    }
+}

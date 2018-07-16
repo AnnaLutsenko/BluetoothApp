@@ -36,19 +36,15 @@ class PeripheralConnectedViewController: UIViewController, StoryboardInstance {
     
     func initController() {
         peripheralNameLbl.text = peripheral.name
-        //
-        centralManager?.connect(peripheral, options: nil)
-        //
 //        rssiReloadTimer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(refreshRSSI), userInfo: nil, repeats: true)
         //
         getNewFirmware()
-        peripheral.discoverServices(nil)
     }
-    /*
+    
     @objc private func refreshRSSI(){
-        peripheral.readRSSI()
+        peripheralManager?.peripheral.readRSSI()
     }
-    */
+    
     func getNewFirmware() {
         firmwareManager.getFirmware(success: { _ in
             print("Successfull getting firmware!")
@@ -79,45 +75,30 @@ class PeripheralConnectedViewController: UIViewController, StoryboardInstance {
     
     //MARK: Actions
     @IBAction func writeValue() {
-//        peripheralManager?.run(comand: ReadIDSounds(), success: <#BLERequest.Success#>, failure: <#BLERequest.Failure#>)
+        peripheralManager?.run(command: ReadIDSounds(), success: { (resp) in
+            print()
+        }, failure: { (error) in
+            print(error.localizedDescription)
+        })
+
     }
     
     @IBAction func readPresets(_ sender: UIButton) {
-        if isDeviceConnected() {
-            peripheralManager?.run(command: ReadPresets(), success: { (resp) in
-                print(resp)
-            }, failure: { (error) in
-                print(error.localizedDescription)
-            })
-        } else {
-            print("Not connected")
-        }
+        peripheralManager?.run(command: ReadPresets(), success: { (resp) in
+            print()
+        }, failure: { (error) in
+            print(error.localizedDescription)
+        })
     }
     
     @IBAction func readParameters(_ sender: UIButton) {
-        if isDeviceConnected() {
-//            readParametersOfDevice()
-        } else {
-            print("Not connected")
-        }
+        peripheralManager?.run(command: ReadParameters(), success: { (resp) in
+            print()
+        }, failure: { (error) in
+            print(error.localizedDescription)
+        })
     }
     
-    
-    
-    func parseData(_ data: Data) {
-//        isDataFully(data) ? print("CRC are equal") : print("Data is not full")
-        
-        //get a data object from the CBCharacteristic
-        let bytesNum : [UInt8] = [data[2], data[3]] // little-endian LSB -> MSB
-        let u16 = CRC16.bytesConvertToInt16(bytesNum)
-        print("u16 = \(u16)")
-        
-        // READ Value
-        let bytes = [UInt8](data)
-        print("Data in HEX: \(CRC16.bytesConvertToHexString(bytes))")
-        //
-        let bytesWithoutCRC = Array(bytes.prefix(bytes.count-2)) // data without CRC16
-    }
 }
 
 /*

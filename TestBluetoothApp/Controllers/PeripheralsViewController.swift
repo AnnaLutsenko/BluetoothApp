@@ -125,7 +125,7 @@ extension PeripheralsViewController: UITableViewDelegate, UITableViewDataSource 
         let peripheralsArray = Array(peripherals)
         let peripheral = peripheralsArray[indexPath.row]
         //
-        didTapConnect(peripheral: peripheral)
+        centralManager?.connect(peripheral, options: nil)
     }
 }
 
@@ -135,6 +135,11 @@ extension PeripheralsViewController: CBCentralManagerDelegate {
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         
         print("Connected to \(String(describing: peripheral.name))")
+        didTapConnect(peripheral: peripheral)
+    }
+    
+    func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
+        print("Disconnected peripheral \(String(describing: peripheral.name))")
     }
     
     

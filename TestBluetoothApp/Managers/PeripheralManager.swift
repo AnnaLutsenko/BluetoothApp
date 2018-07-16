@@ -23,11 +23,12 @@ class BLERequest {
         self.failure = failure
     }
     
+    /// check if response of peripheral is for current command
+    ///
+    /// - Parameter data: it's response of peripheral
     func isThisCommand(_ data: Data) -> Bool {
-//        command.data first 2 byte and compare by second byte
-        //TODO: check data
-        
-        return true
+        let dataInU8 = [UInt8](data)
+        return command.u16Command.arrU8[1] == dataInU8[1]
     }
     
     func isDataFully(_ data: Data) -> Bool {
@@ -136,31 +137,14 @@ extension PeripheralManager: CBPeripheralDelegate {
             let request = bleRequests.first(where: {$0.isThisCommand(value)})
             // read first 2 bytes (fabric method)
             // getResponseWithData
+            (request?.isDataFully(value))! ? print("CRC are equall") : print("Data is not full!")
             let response = ResponseReadParameters(from: value)
             request?.success(response)
             bleRequests = bleRequests.filter { $0 !== request }
             
             // Handle errors
             //
-            
-//            parseData(value)
-            
-            let val = [UInt8](value)
-            
-            if val.count >= 10 {
-                //
-                let hexValCommand = CRC16.bytesConvertToHexString(val.subArray(fromIndex: 0, toIndex: 2))
-                let hexValueNumber = CRC16.bytesConvertToHexString(val.subArray(fromIndex: 2, toIndex: 4))
-                let hexValVersionFW = CRC16.bytesConvertToInt16(val.subArray(fromIndex: 4, toIndex: 6))
-                let hexValVersionHW = CRC16.bytesConvertToInt16(val.subArray(fromIndex: 6, toIndex: 8))
-                let hexValCRC16 = CRC16.bytesConvertToHexString(val.subArray(fromIndex: 8, toIndex: 10))
-                //
-                print("HEX command = \(hexValCommand)")
-                print("HEX serial number = \(hexValueNumber)")
-                print("u16 version FW = \(hexValVersionFW)")
-                print("u16 version HW = \(hexValVersionHW)")
-                print("HEX CRC16= \(hexValCRC16)")
-            }
+            // parseData(value)
             
         }
     }
@@ -178,9 +162,5 @@ extension PeripheralManager: CBPeripheralDelegate {
             print("did Write Value: \(value)")    //whole array
         }
     }
-    
-    func peripheral(_ peripheral: CBPeripheral, didReadRSSI RSSI: NSNumber, error: Error?) {
-        debugPrint(RSSI)
-    }
-    
+
 }
