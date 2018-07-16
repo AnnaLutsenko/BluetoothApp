@@ -15,9 +15,7 @@ enum CRCType {
 
 class CRC16 {
     
-    static let instance = CRC16()
-    
-    func crc16(_ data: [UInt8], type: CRCType) -> UInt16? {
+    static func crc16(_ data: [UInt8], type: CRCType) -> UInt16? {
         if data.isEmpty {
             return nil
         }
@@ -48,7 +46,7 @@ class CRC16 {
     }
     
     // GET HEX from bytes in UInt8
-    func bytesConvertToHexString(_ bytes: [UInt8]) -> String {
+    static func bytesConvertToHexString(_ bytes: [UInt8]) -> String {
         var string = ""
         
         for val in bytes {
@@ -60,7 +58,7 @@ class CRC16 {
     }
     
     // GET Int16 from two bytes UInt8
-    func bytesConvertToInt16(_ bytes: [UInt8]) -> UInt16 {
+    static func bytesConvertToInt16(_ bytes: [UInt8]) -> UInt16 {
         let u16 = UnsafePointer(bytes).withMemoryRebound(to: UInt16.self, capacity: 1) {
             $0.pointee
         }

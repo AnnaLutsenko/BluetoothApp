@@ -21,6 +21,9 @@
 		95A6567D20E0CB4B0041BFAF /* UInt16+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95A6567C20E0CB4B0041BFAF /* UInt16+Ext.swift */; };
 		95B75D2B20F76BD700F7473D /* FirmwareManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95B75D2A20F76BD700F7473D /* FirmwareManager.swift */; };
 		95B75D2E20F7919A00F7473D /* ErrorHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95B75D2D20F7919A00F7473D /* ErrorHandler.swift */; };
+		95B75D3020FA7F0200F7473D /* PeripheralManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95B75D2F20FA7F0200F7473D /* PeripheralManager.swift */; };
+		95B75D3220FA88A300F7473D /* CommandProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95B75D3120FA88A300F7473D /* CommandProtocol.swift */; };
+		95B75D3420FC84EC00F7473D /* Commands.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95B75D3320FC84EC00F7473D /* Commands.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,6 +43,9 @@
 		95A6567C20E0CB4B0041BFAF /* UInt16+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UInt16+Ext.swift"; sourceTree = "<group>"; };
 		95B75D2A20F76BD700F7473D /* FirmwareManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirmwareManager.swift; sourceTree = "<group>"; };
 		95B75D2D20F7919A00F7473D /* ErrorHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorHandler.swift; sourceTree = "<group>"; };
+		95B75D2F20FA7F0200F7473D /* PeripheralManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeripheralManager.swift; sourceTree = "<group>"; };
+		95B75D3120FA88A300F7473D /* CommandProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommandProtocol.swift; sourceTree = "<group>"; };
+		95B75D3320FC84EC00F7473D /* Commands.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Commands.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -118,6 +124,7 @@
 			isa = PBXGroup;
 			children = (
 				951F2CC420DA931A00222247 /* StoryboardInstance.swift */,
+				95B75D3120FA88A300F7473D /* CommandProtocol.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -127,6 +134,8 @@
 			children = (
 				95B75D2D20F7919A00F7473D /* ErrorHandler.swift */,
 				95B75D2A20F76BD700F7473D /* FirmwareManager.swift */,
+				95B75D3320FC84EC00F7473D /* Commands.swift */,
+				95B75D2F20FA7F0200F7473D /* PeripheralManager.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -209,8 +218,11 @@
 				95B75D2E20F7919A00F7473D /* ErrorHandler.swift in Sources */,
 				951F2CBA20D9356500222247 /* ScanButton.swift in Sources */,
 				95A6567D20E0CB4B0041BFAF /* UInt16+Ext.swift in Sources */,
+				95B75D3220FA88A300F7473D /* CommandProtocol.swift in Sources */,
 				951F2CC520DA931A00222247 /* StoryboardInstance.swift in Sources */,
+				95B75D3420FC84EC00F7473D /* Commands.swift in Sources */,
 				95A6567B20DD26710041BFAF /* CRC16.swift in Sources */,
+				95B75D3020FA7F0200F7473D /* PeripheralManager.swift in Sources */,
 				951F2CC320DA775300222247 /* PeripheralConnectedViewController.swift in Sources */,
 				951F2CB820D91DF700222247 /* PeripheralsViewController.swift in Sources */,
 			);

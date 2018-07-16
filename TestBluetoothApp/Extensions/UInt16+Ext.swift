@@ -19,3 +19,23 @@ extension UInt16 {
         return [UInt8Value1, UInt8Value2]
     }
 }
+
+extension Array where Element == UInt8 {
+    
+    func toDataWithCRC() -> Data {
+        let dataInCRC16 = CRC16.crc16(self, type: .MODBUS)
+        
+        if dataInCRC16 != nil {
+            let modbusStr = String(format: "0x%4X", dataInCRC16!)
+            print("MODBUS = " + modbusStr)
+        }
+        guard let crc16InUInt8 = dataInCRC16?.convertToUInt8() else {return Data()}
+        //
+        let dataToSend = [self[0], self[1], crc16InUInt8[0], crc16InUInt8[1]]
+        return NSData(bytes: dataToSend, length: dataToSend.count) as Data
+    }
+    
+    func subArray(fromIndex:Int, toIndex: Int) -> [UInt8] {
+        return Array(self[fromIndex..<toIndex])
+    }
+}

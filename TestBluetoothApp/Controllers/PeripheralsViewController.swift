@@ -18,6 +18,7 @@ class PeripheralsViewController: UIViewController {
     /// Core Bluetooth
     private var centralManager: CBCentralManager?
     private var peripherals = Set<CBPeripheral>()
+    //
     
     
     override func viewDidLoad() {
@@ -78,12 +79,11 @@ class PeripheralsViewController: UIViewController {
     //MARK: - Connect to peripheral
     func didTapConnect(peripheral: CBPeripheral) {
         
-        // peripheral.delegate = self
-        // centralManager?.connect(peripheral, options: nil)
-        //
         guard let vc = PeripheralConnectedViewController.storyboardInstance() else { return }
         vc.centralManager = centralManager
         vc.peripheral = peripheral
+        vc.peripheralManager = PeripheralManager(with: peripheral)
+        //
         navigationController?.pushViewController(vc, animated: true)
         //
     }
@@ -134,8 +134,7 @@ extension PeripheralsViewController: CBCentralManagerDelegate {
     
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         
-        print("Connected to \(peripheral.name)")
-        peripheral.discoverServices(nil)
+        print("Connected to \(String(describing: peripheral.name))")
     }
     
     
@@ -157,33 +156,5 @@ extension PeripheralsViewController: CBCentralManagerDelegate {
         
         peripherals.insert(peripheral)
         tableView.reloadData()
-    }
-}
-
-    // MARK: - CBPeripheralDelegate Methods
-extension PeripheralsViewController: CBPeripheralDelegate {
-    
-    func centralManager(_ central: CBCentralManager, didFailToConnectPeripheral peripheral: CBPeripheral, error: NSError?) {
-        if let error = error {
-            print("Error connecting peripheral: \(error.localizedDescription)")
-        }
-    }
-    
-    public func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
-        
-        if let error = error {
-            print("Error discovering service characteristics: \(error.localizedDescription)")
-        }
-        
-    }
-    
-    public func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
-        
-        if let rxData = characteristic.value {
-            let numberOfBytes = rxData.count
-            var rxByteArray = [UInt8](repeating: 0, count: numberOfBytes)
-            (rxData as NSData).getBytes(&rxByteArray, length: numberOfBytes)
-            print(rxByteArray)
-        }
     }
 }
