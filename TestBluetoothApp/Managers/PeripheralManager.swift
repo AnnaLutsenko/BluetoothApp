@@ -85,7 +85,7 @@ extension PeripheralManager: CBPeripheralDelegate {
             
             if !request.isDataFull(value)
             {
-                debugPrint("Data is not full!")
+                debugPrint("Data is not full! \(value.convertToHEX())")
                 request.failure(PeripheralError.dataNotComplete)
             }
             else if command[0] == ResponseFactory.errorCode

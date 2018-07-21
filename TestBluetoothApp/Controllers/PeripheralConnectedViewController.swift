@@ -74,6 +74,15 @@ class PeripheralConnectedViewController: UIViewController, StoryboardInstance {
         })
     }
     
+    @IBAction func selectPresets(_ sender: UIButton) {
+        peripheralManager?.bleRequestManager.selectCurrentPreset(id: UInt16(8), success: { (resp) in
+            debugPrint("---- Success select presets ----")
+            debugPrint(resp)
+        }, failure: { (error) in
+            debugPrint(error)
+        })
+    }
+    
     @IBAction func readPresets(_ sender: UIButton) {
         peripheralManager?.bleRequestManager.readPresets(completion: { (resp) in
             debugPrint("---- Success read Presets ----")

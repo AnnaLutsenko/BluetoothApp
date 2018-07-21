@@ -15,6 +15,18 @@ class BLERequestManager {
         self.peripheralManager = peripheralManager
     }
     
+    func selectCurrentPreset(id: UInt16, success: @escaping ((Data) -> Void), failure: @escaping BLERequest.Failure) {
+        
+        peripheralManager.run(command: SelectCurrentPreset(presetID: id), success: { (commandResponse) in
+            guard let resp = commandResponse as? Data else {
+                failure(PeripheralError.unknownError)
+                return
+            }
+            
+            success(resp)
+        }, failure: failure)
+    }
+    
     func readPresets(completion: @escaping ((ResponseReadPresets) -> Void), failure: @escaping BLERequest.Failure) {
         
         peripheralManager.run(command: ReadPresets(), success: { (commandResponse) in

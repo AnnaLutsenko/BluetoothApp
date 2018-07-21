@@ -109,6 +109,29 @@ struct ResponseReadPresets: CommandResponse {
     }
 }
 
+/// 11 - Выбор текущего Пресета в устройстве
+struct SelectCurrentPreset: CommandProtocol {
+    var u16Command: CommandsU16 = .selectPreset
+    
+    var data: Data
+    
+    init(presetID: UInt16) {
+        var commandArr = u16Command.arrU8
+        let u8ID = presetID.convertToUInt8()
+        commandArr.append(u8ID[0])
+        commandArr.append(u8ID[1])
+        data = commandArr.toDataWithCRC()
+        print("Select current preset: \(data.convertToHEX()))")
+    }
+}
+
+struct ResponseSelectCurrentPreset: CommandResponse {
+    init(from data: Data) {
+        parseData(data)
+        //
+    }
+}
+
 /// 12 - Mute ON
 struct MuteOn: CommandProtocol {
     var u16Command: CommandsU16 = .muteON
@@ -140,8 +163,6 @@ struct ReadCAN: CommandProtocol {
     var u16Command: CommandsU16 = .readCAN
     let data = CommandsU16.readCAN.arrU8.toDataWithCRC()
 }
-
-
 
 struct ResponseReadCAN: CommandResponse {
     var idCAN = UInt16.min
