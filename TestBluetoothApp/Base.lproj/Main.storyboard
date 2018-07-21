@@ -128,9 +128,9 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" reversesTitleShadowWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yja-42-brZ">
-                                <rect key="frame" x="16" y="89" width="219" height="33"/>
+                                <rect key="frame" x="16" y="89" width="141" height="33"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="17"/>
-                                <state key="normal" title="Read parameters of device">
+                                <state key="normal" title="Read parameters">
                                     <color key="titleColor" red="0.61568627450000002" green="0.70980392160000005" blue="0.94117647059999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                                 <connections>
@@ -177,6 +177,16 @@
                                     <action selector="muteON:" destination="FAw-uD-W23" eventType="touchUpInside" id="zJ9-l2-LTS"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" reversesTitleShadowWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FdH-HK-qQ6">
+                                <rect key="frame" x="299" y="89" width="60" height="33"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="17"/>
+                                <state key="normal" title="Poyling">
+                                    <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="poyling:" destination="FAw-uD-W23" eventType="touchUpInside" id="Cjm-k9-aSf"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
@@ -185,10 +195,12 @@
                             <constraint firstItem="fpJ-EL-BH5" firstAttribute="trailing" secondItem="kMG-xq-y1W" secondAttribute="trailing" id="EGy-wO-alp"/>
                             <constraint firstItem="yja-42-brZ" firstAttribute="top" secondItem="wVf-6y-dmM" secondAttribute="bottom" constant="8" id="GNH-cV-x5i"/>
                             <constraint firstItem="XOv-W5-fmr" firstAttribute="top" secondItem="38I-Sf-r9M" secondAttribute="bottom" constant="8" id="Grl-SH-X5W"/>
+                            <constraint firstItem="FdH-HK-qQ6" firstAttribute="top" secondItem="fpJ-EL-BH5" secondAttribute="bottom" constant="7" id="Gsp-sg-SKX"/>
                             <constraint firstItem="kMG-xq-y1W" firstAttribute="leading" secondItem="cFn-h6-Eq0" secondAttribute="leading" constant="16" id="HcC-0J-jTq"/>
                             <constraint firstItem="vi3-rc-VSp" firstAttribute="centerY" secondItem="9xS-ZX-fZU" secondAttribute="centerY" id="IcE-Qo-bwz"/>
                             <constraint firstItem="dU5-Na-fgu" firstAttribute="leading" secondItem="XOv-W5-fmr" secondAttribute="leading" id="Lfe-8Z-hkB"/>
                             <constraint firstItem="dU5-Na-fgu" firstAttribute="top" secondItem="XOv-W5-fmr" secondAttribute="bottom" constant="8" id="Qu7-aJ-7Lg"/>
+                            <constraint firstItem="FdH-HK-qQ6" firstAttribute="trailing" secondItem="fpJ-EL-BH5" secondAttribute="trailing" id="aNL-SW-eJu"/>
                             <constraint firstItem="9xS-ZX-fZU" firstAttribute="centerY" secondItem="dU5-Na-fgu" secondAttribute="centerY" id="cVN-iW-Hgn"/>
                             <constraint firstItem="wVf-6y-dmM" firstAttribute="leading" secondItem="kMG-xq-y1W" secondAttribute="leading" id="cZL-c2-vdN"/>
                             <constraint firstItem="fpJ-EL-BH5" firstAttribute="top" secondItem="kMG-xq-y1W" secondAttribute="bottom" constant="8" id="e6l-xI-lNt"/>

@@ -9,6 +9,21 @@
 import Foundation
 import CoreBluetooth
 
+enum PeripheralState: UInt16 {
+    case free = 0x0000
+    case busy = 0x0001
+    case error = 0x0002
+    case unknownError
+    
+    init(rawValue: UInt16) {
+        switch rawValue {
+        case PeripheralState.free.rawValue: self = .free
+        case PeripheralState.busy.rawValue: self = .busy
+        case PeripheralState.error.rawValue: self = .error
+        default: self = .unknownError
+        }
+    }
+}
 
 class PeripheralManager: NSObject {
     

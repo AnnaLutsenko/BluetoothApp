@@ -92,4 +92,17 @@ class BLERequestManager {
             
         }, failure: failure)
     }
+    
+    func poyling(success: @escaping ((ResponsePoyling)-> Void), failure: @escaping BLERequest.Failure) {
+        
+        peripheralManager.run(command: Poyling(), success: { (commandResponse) in
+            
+            guard let resp = commandResponse as? ResponsePoyling else {
+                failure(PeripheralError.unknownError)
+                return
+            }
+            success(resp)
+            
+        }, failure: failure)
+    }
 }

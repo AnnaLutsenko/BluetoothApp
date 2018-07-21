@@ -45,7 +45,7 @@ enum PeripheralError: UInt16, Error {
     case readOfCANFailed            = 0x804A // 14
     case parametersNotSetToCAN      = 0x804B // 15
     
-    case unknownError               = 0x8000
+    case unknownError
     case dataNotComplete
     
     init(rawValue: UInt16) {

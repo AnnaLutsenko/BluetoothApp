@@ -122,6 +122,15 @@ class PeripheralConnectedViewController: UIViewController, StoryboardInstance {
         })
     }
     
+    @IBAction func poyling(_ sender: UIButton) {
+        peripheralManager?.bleRequestManager.poyling(success: { (resp) in
+            debugPrint("---- Successful Poyling ----")
+            debugPrint(resp)
+        }, failure: { (error) in
+            debugPrint(error.localizedDescription)
+        })
+    }
+    
 }
 
 /*

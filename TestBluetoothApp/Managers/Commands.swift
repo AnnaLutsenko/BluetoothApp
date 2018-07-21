@@ -161,13 +161,22 @@ struct ResponseReadCAN: CommandResponse {
 /// 16 - Команда пойлинга
 struct Poyling: CommandProtocol {
     var u16Command: CommandsU16 = .poyling
-    let data = CommandsU16.readCAN.arrU8.toDataWithCRC()
+    let data = CommandsU16.poyling.arrU8.toDataWithCRC()
 }
 
 struct ResponsePoyling: CommandResponse {
+    var state = PeripheralState.busy
+    var percent = UInt16.min
+    
     init(from data: Data) {
-        parseData(data)
-        //
+        let val = [UInt8](data)
+        if val.count == 8 {
+            let byte2 = CRC16.bytesConvertToInt16(val.subArray(fromIndex: 2, toIndex: 4))
+            state = PeripheralState(rawValue: byte2)
+            percent = CRC16.bytesConvertToInt16(val.subArray(fromIndex: 4, toIndex: 6))
+            //
+            parseData(data)
+        }
     }
 }
 

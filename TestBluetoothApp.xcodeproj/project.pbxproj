@@ -139,12 +139,12 @@
 		95B75D2C20F76BE600F7473D /* Managers */ = {
 			isa = PBXGroup;
 			children = (
-				95B75D2D20F7919A00F7473D /* ErrorHandler.swift */,
 				95B75D2A20F76BD700F7473D /* FirmwareManager.swift */,
-				9516DA552103530D00862B17 /* BLERequest.swift */,
-				95B75D3320FC84EC00F7473D /* Commands.swift */,
+				95B75D2D20F7919A00F7473D /* ErrorHandler.swift */,
 				95B75D2F20FA7F0200F7473D /* PeripheralManager.swift */,
+				9516DA552103530D00862B17 /* BLERequest.swift */,
 				9516DA532103526D00862B17 /* BLERequestManager.swift */,
+				95B75D3320FC84EC00F7473D /* Commands.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
