@@ -9,60 +9,27 @@
 import Foundation
 import CoreBluetooth
 
-class BLERequest {
-    typealias Success = (CommandResponse)->()
-    typealias Failure = (Error)->()
-    //
-    var command: CommandProtocol
-    var success: Success
-    var failure: Failure
-    
-    init(command: CommandProtocol, success: @escaping Success, failure: @escaping Failure) {
-        self.command = command
-        self.success = success
-        self.failure = failure
-    }
-    
-    /// check if response of peripheral is for current command
-    ///
-    /// - Parameter data: it's response of peripheral
-    func isThisCommand(_ data: Data) -> Bool {
-        let dataInU8 = [UInt8](data)
-        return command.u16Command.arrU8[1] == dataInU8[1]
-    }
-    
-    func isDataFully(_ data: Data) -> Bool {
-        let bytes = [UInt8](data)
-        //
-        let previousByte = bytes[bytes.count-2]
-        let lastByte = bytes[bytes.count-1]
-        
-        let hexValCRC16 = CRC16.bytesConvertToHexString([previousByte, lastByte])
-        //
-        let data = Array(bytes.prefix(bytes.count-2)) // data without CRC16
-        guard let modbusValue = CRC16.crc16(data, type: .MODBUS) else { return false } // get CRC16 from data
-        //
-        let modbusStr = String(format: "%4X", modbusValue)
-        print("MODBUS = \(modbusStr)")
-        print("CRC16 = \(hexValCRC16)")
-        //
-        return hexValCRC16 == modbusStr
-    }
-}
 
 class PeripheralManager: NSObject {
+    
     let peripheral: CBPeripheral
+    //
+    /// Manager for updating firmware on peripheral
+    let firmwareManager = FirmwareManager()
     //
     private var arrayReadWriteChar: [CBCharacteristic] = []
     private var bleRequests: [BLERequest] = []
     
+    private (set) var bleRequestManager: BLERequestManager!
     
     init(with peripheral: CBPeripheral) {
         self.peripheral = peripheral
         //
         super.init()
+        self.bleRequestManager = BLERequestManager(peripheralManager: self)
         peripheral.delegate = self
         peripheral.discoverServices(nil)
+        
     }
     
     //MARK: - Metonds
@@ -71,10 +38,56 @@ class PeripheralManager: NSObject {
         bleRequests.append(BLERequest(command: command, success: success, failure: failure))
         peripheral.writeValue(command.data, for: arrayReadWriteChar[0], type: .withoutResponse)
     }
+    
+    func getNewFirmware() {
+        firmwareManager.getFirmware(success: { _ in
+            print("Successfull getting firmware!")
+        }) { (error) in
+            print(error.localizedDescription)
+        }
+    }
 }
 
 // MARK: - CBPeripheralDelegate Methods
 extension PeripheralManager: CBPeripheralDelegate {
+    
+    public func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
+        
+        if let value = characteristic.value {
+            let numberOfBytes = value.count
+            var rxByteArray = [UInt8](repeating: 0, count: numberOfBytes)
+            (value as NSData).getBytes(&rxByteArray, length: numberOfBytes)
+            
+            debugPrint("-------------------")
+            debugPrint("Data = \(value); \(value.count)")
+            
+            
+            guard let request = bleRequests.first(where: {$0.isThisCommand(value)}) else {
+                return
+            }
+            
+            let command = Array([UInt8](value).prefix(2))
+            
+            if !request.isDataFull(value)
+            {
+                debugPrint("Data is not full!")
+                request.failure(PeripheralError.dataNotComplete)
+            }
+            else if command[0] == ResponseFactory.errorCode
+            {
+                let u16 = CRC16.bytesConvertToInt16(command)
+                debugPrint("ERROR -----> \(PeripheralError.init(rawValue: u16))")
+                request.failure(PeripheralError.init(rawValue: u16))
+            }
+            else
+            {
+                let response = ResponseFactory.getCommandResponse(value)
+                request.success(response)
+            }
+            
+            bleRequests = bleRequests.filter { $0 !== request }
+        }
+    }
     
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
         if let err = error {
@@ -84,18 +97,6 @@ extension PeripheralManager: CBPeripheralDelegate {
         
         for serv in services {
             peripheral.discoverCharacteristics(nil, for: serv)
-        }
-    }
-    
-    func peripheral(_ peripheral: CBPeripheral, didUpdateNotificationStateFor characteristic: CBCharacteristic, error: Error?) {
-        if let err = error {
-            print(err.localizedDescription)
-        }
-    }
-    
-    func centralManager(_ central: CBCentralManager, didFailToConnectPeripheral peripheral: CBPeripheral, error: NSError?) {
-        if let error = error {
-            print("Error connecting peripheral: \(error.localizedDescription)")
         }
     }
     
@@ -123,44 +124,9 @@ extension PeripheralManager: CBPeripheralDelegate {
         }
     }
     
-    public func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
-        
-        if let value = characteristic.value {
-            let numberOfBytes = value.count
-            var rxByteArray = [UInt8](repeating: 0, count: numberOfBytes)
-            (value as NSData).getBytes(&rxByteArray, length: numberOfBytes)
-            
-            print("-------------------")
-            print("Data = \(value); \(value.count)")
-            print("Bytes array = \(rxByteArray)")
-            
-            let request = bleRequests.first(where: {$0.isThisCommand(value)})
-            // read first 2 bytes (fabric method)
-            // getResponseWithData
-            (request?.isDataFully(value))! ? print("CRC are equall") : print("Data is not full!")
-            let response = ResponseReadParameters(from: value)
-            request?.success(response)
-            bleRequests = bleRequests.filter { $0 !== request }
-            
-            // Handle errors
-            //
-            // parseData(value)
-            
-        }
-    }
-    
-    func peripheral(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: Error?) {
-        
-        print("did Write ValueFor", characteristic)
-        
+    func peripheral(_ peripheral: CBPeripheral, didUpdateNotificationStateFor characteristic: CBCharacteristic, error: Error?) {
         if let err = error {
             print(err.localizedDescription)
         }
-        
-        if let data = characteristic.value {
-            let value = [UInt8](data)
-            print("did Write Value: \(value)")    //whole array
-        }
     }
-
 }

@@ -10,7 +10,7 @@ import UIKit
 import CoreBluetooth
 
 class PeripheralsViewController: UIViewController {
-
+    
     /// UI Elements
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var scanBtn: ScanButton!
@@ -89,7 +89,7 @@ class PeripheralsViewController: UIViewController {
     }
 }
 
-    // MARK: - UITableViewDelegate
+// MARK: - UITableViewDelegate
 extension PeripheralsViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -129,7 +129,7 @@ extension PeripheralsViewController: UITableViewDelegate, UITableViewDataSource 
     }
 }
 
-    // MARK: - CBCentralManagerDelegate Methods
+// MARK: - CBCentralManagerDelegate Methods
 extension PeripheralsViewController: CBCentralManagerDelegate {
     
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {

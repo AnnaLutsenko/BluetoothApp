@@ -124,7 +124,7 @@
                                     <color key="titleColor" red="0.61568627450000002" green="0.70980392160000005" blue="0.94117647059999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                                 <connections>
-                                    <action selector="writeValue" destination="FAw-uD-W23" eventType="touchUpInside" id="2gk-K9-rQO"/>
+                                    <action selector="readIDSound" destination="FAw-uD-W23" eventType="touchUpInside" id="VDb-7D-49R"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" reversesTitleShadowWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yja-42-brZ">
@@ -134,7 +134,7 @@
                                     <color key="titleColor" red="0.61568627450000002" green="0.70980392160000005" blue="0.94117647059999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                                 <connections>
-                                    <action selector="readParameters:" destination="FAw-uD-W23" eventType="touchUpInside" id="xhD-48-B7k"/>
+                                    <action selector="readParameters:" destination="FAw-uD-W23" eventType="touchUpInside" id="ERW-pS-uIe"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" reversesTitleShadowWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XOv-W5-fmr">
@@ -144,23 +144,59 @@
                                     <color key="titleColor" red="0.61568627450000002" green="0.70980392160000005" blue="0.94117647059999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                                 <connections>
-                                    <action selector="readPresets:" destination="FAw-uD-W23" eventType="touchUpInside" id="0sg-Gm-2iN"/>
+                                    <action selector="readPresets:" destination="FAw-uD-W23" eventType="touchUpInside" id="ZSS-el-RS2"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" reversesTitleShadowWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dU5-Na-fgu">
+                                <rect key="frame" x="16" y="212" width="84" height="33"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="17"/>
+                                <state key="normal" title="Read CAN">
+                                    <color key="titleColor" red="0.61568627450000002" green="0.70980392160000005" blue="0.94117647059999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="readCAN:" destination="FAw-uD-W23" eventType="touchUpInside" id="B5u-dq-59W"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" reversesTitleShadowWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vi3-rc-VSp">
+                                <rect key="frame" x="279" y="212" width="80" height="33"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="17"/>
+                                <state key="normal" title="Mute OFF">
+                                    <color key="titleColor" red="1" green="0.50196078430000002" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="muteOFF:" destination="FAw-uD-W23" eventType="touchUpInside" id="uJr-hw-Q5t"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9xS-ZX-fZU">
+                                <rect key="frame" x="191" y="212" width="72" height="33"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="17"/>
+                                <state key="normal" title="Mute ON">
+                                    <color key="titleColor" red="0.61568627450000002" green="0.70980392160000005" blue="0.94117647059999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="muteON:" destination="FAw-uD-W23" eventType="touchUpInside" id="zJ9-l2-LTS"/>
                                 </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="wVf-6y-dmM" firstAttribute="top" secondItem="kMG-xq-y1W" secondAttribute="bottom" constant="8" id="4DO-4z-oJR"/>
+                            <constraint firstItem="vi3-rc-VSp" firstAttribute="leading" secondItem="9xS-ZX-fZU" secondAttribute="trailing" constant="16" id="7l0-z5-hf5"/>
                             <constraint firstItem="fpJ-EL-BH5" firstAttribute="trailing" secondItem="kMG-xq-y1W" secondAttribute="trailing" id="EGy-wO-alp"/>
                             <constraint firstItem="yja-42-brZ" firstAttribute="top" secondItem="wVf-6y-dmM" secondAttribute="bottom" constant="8" id="GNH-cV-x5i"/>
                             <constraint firstItem="XOv-W5-fmr" firstAttribute="top" secondItem="38I-Sf-r9M" secondAttribute="bottom" constant="8" id="Grl-SH-X5W"/>
                             <constraint firstItem="kMG-xq-y1W" firstAttribute="leading" secondItem="cFn-h6-Eq0" secondAttribute="leading" constant="16" id="HcC-0J-jTq"/>
+                            <constraint firstItem="vi3-rc-VSp" firstAttribute="centerY" secondItem="9xS-ZX-fZU" secondAttribute="centerY" id="IcE-Qo-bwz"/>
+                            <constraint firstItem="dU5-Na-fgu" firstAttribute="leading" secondItem="XOv-W5-fmr" secondAttribute="leading" id="Lfe-8Z-hkB"/>
+                            <constraint firstItem="dU5-Na-fgu" firstAttribute="top" secondItem="XOv-W5-fmr" secondAttribute="bottom" constant="8" id="Qu7-aJ-7Lg"/>
+                            <constraint firstItem="9xS-ZX-fZU" firstAttribute="centerY" secondItem="dU5-Na-fgu" secondAttribute="centerY" id="cVN-iW-Hgn"/>
                             <constraint firstItem="wVf-6y-dmM" firstAttribute="leading" secondItem="kMG-xq-y1W" secondAttribute="leading" id="cZL-c2-vdN"/>
                             <constraint firstItem="fpJ-EL-BH5" firstAttribute="top" secondItem="kMG-xq-y1W" secondAttribute="bottom" constant="8" id="e6l-xI-lNt"/>
                             <constraint firstItem="yja-42-brZ" firstAttribute="leading" secondItem="wVf-6y-dmM" secondAttribute="leading" id="f09-TS-zfi"/>
                             <constraint firstItem="kMG-xq-y1W" firstAttribute="top" secondItem="cFn-h6-Eq0" secondAttribute="top" constant="8" id="fMA-7P-qiv"/>
                             <constraint firstItem="38I-Sf-r9M" firstAttribute="top" secondItem="yja-42-brZ" secondAttribute="bottom" constant="8" id="fzM-bu-Zo8"/>
                             <constraint firstItem="XOv-W5-fmr" firstAttribute="leading" secondItem="38I-Sf-r9M" secondAttribute="leading" id="rdD-zS-lOe"/>
+                            <constraint firstItem="cFn-h6-Eq0" firstAttribute="trailing" secondItem="vi3-rc-VSp" secondAttribute="trailing" constant="16" id="vFI-ZI-icJ"/>
                             <constraint firstItem="38I-Sf-r9M" firstAttribute="leading" secondItem="yja-42-brZ" secondAttribute="leading" id="z7n-Yz-LFc"/>
                             <constraint firstItem="cFn-h6-Eq0" firstAttribute="trailing" secondItem="kMG-xq-y1W" secondAttribute="trailing" constant="16" id="zmW-SN-dhB"/>
                         </constraints>

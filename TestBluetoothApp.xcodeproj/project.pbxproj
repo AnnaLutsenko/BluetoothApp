@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9516DA542103526D00862B17 /* BLERequestManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9516DA532103526D00862B17 /* BLERequestManager.swift */; };
+		9516DA562103530D00862B17 /* BLERequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9516DA552103530D00862B17 /* BLERequest.swift */; };
+		9516DA582103535800862B17 /* ResponseCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9516DA572103535800862B17 /* ResponseCreator.swift */; };
 		951F2CA620D91D7500222247 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 951F2CA520D91D7500222247 /* AppDelegate.swift */; };
 		951F2CAB20D91D7500222247 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 951F2CA920D91D7500222247 /* Main.storyboard */; };
 		951F2CAD20D91D7800222247 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 951F2CAC20D91D7800222247 /* Assets.xcassets */; };
@@ -27,6 +30,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		9516DA532103526D00862B17 /* BLERequestManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLERequestManager.swift; sourceTree = "<group>"; };
+		9516DA552103530D00862B17 /* BLERequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLERequest.swift; sourceTree = "<group>"; };
+		9516DA572103535800862B17 /* ResponseCreator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponseCreator.swift; sourceTree = "<group>"; };
 		951F2CA220D91D7500222247 /* TestBluetoothApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TestBluetoothApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		951F2CA520D91D7500222247 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		951F2CAA20D91D7500222247 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -125,6 +131,7 @@
 			children = (
 				951F2CC420DA931A00222247 /* StoryboardInstance.swift */,
 				95B75D3120FA88A300F7473D /* CommandProtocol.swift */,
+				9516DA572103535800862B17 /* ResponseCreator.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -134,8 +141,10 @@
 			children = (
 				95B75D2D20F7919A00F7473D /* ErrorHandler.swift */,
 				95B75D2A20F76BD700F7473D /* FirmwareManager.swift */,
+				9516DA552103530D00862B17 /* BLERequest.swift */,
 				95B75D3320FC84EC00F7473D /* Commands.swift */,
 				95B75D2F20FA7F0200F7473D /* PeripheralManager.swift */,
+				9516DA532103526D00862B17 /* BLERequestManager.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -217,13 +226,16 @@
 				951F2CBC20D935FC00222247 /* UIColor+Ext.swift in Sources */,
 				95B75D2E20F7919A00F7473D /* ErrorHandler.swift in Sources */,
 				951F2CBA20D9356500222247 /* ScanButton.swift in Sources */,
+				9516DA582103535800862B17 /* ResponseCreator.swift in Sources */,
 				95A6567D20E0CB4B0041BFAF /* UInt16+Ext.swift in Sources */,
+				9516DA562103530D00862B17 /* BLERequest.swift in Sources */,
 				95B75D3220FA88A300F7473D /* CommandProtocol.swift in Sources */,
 				951F2CC520DA931A00222247 /* StoryboardInstance.swift in Sources */,
 				95B75D3420FC84EC00F7473D /* Commands.swift in Sources */,
 				95A6567B20DD26710041BFAF /* CRC16.swift in Sources */,
 				95B75D3020FA7F0200F7473D /* PeripheralManager.swift in Sources */,
 				951F2CC320DA775300222247 /* PeripheralConnectedViewController.swift in Sources */,
+				9516DA542103526D00862B17 /* BLERequestManager.swift in Sources */,
 				951F2CB820D91DF700222247 /* PeripheralsViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -369,7 +381,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 6Y97YM76EY;
+				DEVELOPMENT_TEAM = KK6SM6Q23J;
 				INFOPLIST_FILE = TestBluetoothApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -388,7 +400,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 6Y97YM76EY;
+				DEVELOPMENT_TEAM = KK6SM6Q23J;
 				INFOPLIST_FILE = TestBluetoothApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (

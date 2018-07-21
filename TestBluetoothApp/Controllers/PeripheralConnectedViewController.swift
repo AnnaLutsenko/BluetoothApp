@@ -24,8 +24,6 @@ class PeripheralConnectedViewController: UIViewController, StoryboardInstance {
     //
     var arrayReadWriteChar = [CBCharacteristic]()
     //
-    let firmwareManager = FirmwareManager()
-    //
     var peripheralManager: PeripheralManager?
     
     
@@ -36,21 +34,13 @@ class PeripheralConnectedViewController: UIViewController, StoryboardInstance {
     
     func initController() {
         peripheralNameLbl.text = peripheral.name
-//        rssiReloadTimer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(refreshRSSI), userInfo: nil, repeats: true)
+        //        rssiReloadTimer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(refreshRSSI), userInfo: nil, repeats: true)
         //
-        getNewFirmware()
+        peripheralManager?.getNewFirmware()
     }
     
     @objc private func refreshRSSI(){
         peripheralManager?.peripheral.readRSSI()
-    }
-    
-    func getNewFirmware() {
-        firmwareManager.getFirmware(success: { _ in
-            print("Successfull getting firmware!")
-        }) { (error) in
-            print(error.localizedDescription)
-        }
     }
     
     func isDeviceConnected() -> Bool {
@@ -74,28 +64,61 @@ class PeripheralConnectedViewController: UIViewController, StoryboardInstance {
     }
     
     //MARK: Actions
-    @IBAction func writeValue() {
-        peripheralManager?.run(command: ReadIDSounds(), success: { (resp) in
-            print()
+    @IBAction func readIDSound() {
+        
+        peripheralManager?.bleRequestManager.readIDSounds(completion: { (resp) in
+            debugPrint("---- Success Read ID Sounds ----")
+            debugPrint(resp)
         }, failure: { (error) in
-            print(error.localizedDescription)
+            debugPrint(error.localizedDescription)
         })
-
     }
     
     @IBAction func readPresets(_ sender: UIButton) {
-        peripheralManager?.run(command: ReadPresets(), success: { (resp) in
-            print()
+        peripheralManager?.bleRequestManager.readPresets(completion: { (resp) in
+            debugPrint("---- Success read Presets ----")
+            debugPrint(resp)
         }, failure: { (error) in
-            print(error.localizedDescription)
+            debugPrint(error)
         })
     }
     
     @IBAction func readParameters(_ sender: UIButton) {
-        peripheralManager?.run(command: ReadParameters(), success: { (resp) in
-            print()
+        peripheralManager?.bleRequestManager.readParameters(success: { (resp) in
+            debugPrint("---- Succes read Parameters ----")
+            debugPrint(resp)
         }, failure: { (error) in
-            print(error.localizedDescription)
+            debugPrint(error)
+        })
+    }
+    
+    @IBAction func muteON(_ sender: UIButton) {
+        
+        peripheralManager?.bleRequestManager.muteON(success: { (resp) in
+            debugPrint("---- Success mute ON -----")
+            debugPrint(resp)
+        }, failure: { (error) in
+            debugPrint(error.localizedDescription)
+        })
+    }
+    
+    @IBAction func muteOFF(_ sender: UIButton) {
+        
+        peripheralManager?.bleRequestManager.muteOFF(success: { (resp) in
+            debugPrint("---- Success mute OFF -----")
+            debugPrint(resp)
+        }, failure: { (error) in
+            debugPrint(error.localizedDescription)
+        })
+    }
+    
+    @IBAction func readCAN(_ sender: UIButton) {
+        
+        peripheralManager?.bleRequestManager.readCAN(completion: { (resp) in
+            debugPrint("---- Successful Read CAN ----")
+            debugPrint(resp)
+        }, failure: { (error) in
+            debugPrint(error.localizedDescription)
         })
     }
     

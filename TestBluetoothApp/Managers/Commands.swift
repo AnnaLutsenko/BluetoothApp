@@ -10,16 +10,20 @@ import UIKit
 
 enum CommandsU16: UInt16 {
     
-    case readParameters = 0x0001       // 2
-    case updateFirmware = 0x0050       // 3
-    
+    case readParameters     = 0x0001   // 2
+    case updateFirmware     = 0x0050   // 3
+    case confirmationUpdate = 0x0051   // 3
+    //
     case writeUpdateSound   = 0x0040   // 4.1
     case writeSample        = 0x0041   // 4.2
     case writeRulesSound    = 0x0042   // 4.3
     case writeSettingsSound = 0x0043   // 4.4 & 7
+    case confirmRecordSound = 0x0044   // 4.5 Confirming the recording / updating of the sound package in the device //TODO: command
+    //
+    case startListenSample  = 0x0020   // 6
+    case stopListenSample   = 0x0021   // 6
     //
     case deleteSound    = 0x0046        // 5
-    case listenSample   = 0x0020        // 6
     //
     case readIDSounds   = 0x0047        // 8
     //
@@ -28,7 +32,7 @@ enum CommandsU16: UInt16 {
     case selectPreset   = 0x0045        // 11
     //
     case muteON         = 0x0048        // 12
-    case muteOF         = 0x0049        // 13
+    case muteOFF        = 0x0049        // 13
     //
     case readCAN        = 0x004A        // 14
     case writeToCAN     = 0x004B        // 15
@@ -39,46 +43,139 @@ enum CommandsU16: UInt16 {
     var arrU8: [UInt8] {
         return self.rawValue.convertToUInt8()
     }
+    
+    /// Get second Byte from selected command
+    var secondByte: UInt8 {
+        return self.rawValue.convertToUInt8()[1]
+    }
 }
 
 
-/// Чтение параметров устройства (2)
+/// 2 - Чтение параметров устройства
 struct ReadParameters: CommandProtocol {
     var u16Command: CommandsU16 = .readParameters
     let data = CommandsU16.readParameters.arrU8.toDataWithCRC()
 }
 
 struct ResponseReadParameters: CommandResponse {
+    var serialNumber = UInt16.min
+    var firmware = UInt16.min
+    var hardware = UInt16.min
+    
     init(from data: Data) {
-        parseData(data)
         //
         let val = [UInt8](data)
         
-        if val.count >= 10 {
+        if val.count == 10 {
             //
-            let hexValCommand = CRC16.bytesConvertToHexString(val.subArray(fromIndex: 0, toIndex: 2))
-            let hexValueNumber = CRC16.bytesConvertToHexString(val.subArray(fromIndex: 2, toIndex: 4))
-            let hexValVersionFW = CRC16.bytesConvertToInt16(val.subArray(fromIndex: 4, toIndex: 6))
-            let hexValVersionHW = CRC16.bytesConvertToInt16(val.subArray(fromIndex: 6, toIndex: 8))
-            let hexValCRC16 = CRC16.bytesConvertToHexString(val.subArray(fromIndex: 8, toIndex: 10))
+            let hexValCommand = CRC16.bytesConvertToInt16(val.subArray(fromIndex: 0, toIndex: 2))
+            serialNumber = CRC16.bytesConvertToInt16(val.subArray(fromIndex: 2, toIndex: 4))
+            firmware = CRC16.bytesConvertToInt16(val.subArray(fromIndex: 4, toIndex: 6))
+            hardware = CRC16.bytesConvertToInt16(val.subArray(fromIndex: 6, toIndex: 8))
             //
+            print("HEX serial number = \(serialNumber)")
+            print("u16 version FW = \(firmware)")
+            print("u16 version HW = \(hardware)")
             print("HEX command = \(hexValCommand)")
-            print("HEX serial number = \(hexValueNumber)")
-            print("u16 version FW = \(hexValVersionFW)")
-            print("u16 version HW = \(hexValVersionHW)")
-            print("HEX CRC16= \(hexValCRC16)")
+            //
+            parseData(data)
         }
     }
 }
 
-/// Чтение ID установленных звуковых пакетов (8)
+/// 8 - Чтение ID установленных звуковых пакетов
 struct ReadIDSounds: CommandProtocol {
     var u16Command: CommandsU16 = .readIDSounds
     let data = CommandsU16.readIDSounds.arrU8.toDataWithCRC()
 }
 
-/// Чтение пресетов (9)
+struct ResponseReadIDSounds: CommandResponse {
+    init(from data: Data) {
+        parseData(data)
+        //
+    }
+}
+
+/// 9 - Чтение пресетов
 struct ReadPresets: CommandProtocol {
     var u16Command: CommandsU16 = .readPresets
     let data = CommandsU16.readPresets.arrU8.toDataWithCRC()
+}
+
+struct ResponseReadPresets: CommandResponse {
+    init(from data: Data) {
+        parseData(data)
+        //
+    }
+}
+
+/// 12 - Mute ON
+struct MuteOn: CommandProtocol {
+    var u16Command: CommandsU16 = .muteON
+    let data = CommandsU16.muteON.arrU8.toDataWithCRC()
+}
+
+struct ResponseMuteOn: CommandResponse {
+    init(from data: Data) {
+        parseData(data)
+        //
+    }
+}
+
+/// 13 - Mute OFF
+struct MuteOff: CommandProtocol {
+    var u16Command: CommandsU16 = .muteOFF
+    let data = CommandsU16.muteOFF.arrU8.toDataWithCRC()
+}
+
+struct ResponseMuteOff: CommandResponse {
+    init(from data: Data) {
+        parseData(data)
+        //
+    }
+}
+
+/// 14 - Reading ID and version parameters of CAN from peripheral
+struct ReadCAN: CommandProtocol {
+    var u16Command: CommandsU16 = .readCAN
+    let data = CommandsU16.readCAN.arrU8.toDataWithCRC()
+}
+
+
+
+struct ResponseReadCAN: CommandResponse {
+    var idCAN = UInt16.min
+    var idVersion = UInt16.min
+    
+    init(from data: Data) {
+        let val = [UInt8](data)
+        if val.count == 8 {
+            idCAN = CRC16.bytesConvertToInt16(val.subArray(fromIndex: 2, toIndex: 4))
+            idVersion = CRC16.bytesConvertToInt16(val.subArray(fromIndex: 4, toIndex: 6))
+            //
+            parseData(data)
+        }
+    }
+}
+
+/// 16 - Команда пойлинга
+struct Poyling: CommandProtocol {
+    var u16Command: CommandsU16 = .poyling
+    let data = CommandsU16.readCAN.arrU8.toDataWithCRC()
+}
+
+struct ResponsePoyling: CommandResponse {
+    init(from data: Data) {
+        parseData(data)
+        //
+    }
+}
+
+
+/// Default response
+struct ResponseDefault: CommandResponse {
+    init(from data: Data) {
+        parseData(data)
+        //
+    }
 }
