@@ -69,9 +69,9 @@ struct ResponseReadParameters: CommandResponse {
         
         if val.count == 10 {
             //
-            serialNumber = CRC16.bytesConvertToInt16(val.subArray(fromIndex: 2, toIndex: 4))
-            firmware = CRC16.bytesConvertToInt16(val.subArray(fromIndex: 4, toIndex: 6))
-            hardware = CRC16.bytesConvertToInt16(val.subArray(fromIndex: 6, toIndex: 8))
+            serialNumber = val.subArray(fromIndex: 2, toIndex: 4).convertToInt16()
+            firmware = val.subArray(fromIndex: 4, toIndex: 6).convertToInt16()
+            hardware = val.subArray(fromIndex: 6, toIndex: 8).convertToInt16()
             //
             print("HEX serial number = \(serialNumber)")
             print("u16 version FW = \(firmware)")
@@ -124,8 +124,8 @@ struct ResponseStartPlaySound: CommandResponse {
     init(from data: Data) {
         let val = [UInt8](data)
         if val.count == 8 {
-            soundID = CRC16.bytesConvertToInt16(val.subArray(fromIndex: 2, toIndex: 4))
-            versionOfPackageID = CRC16.bytesConvertToInt16(val.subArray(fromIndex: 4, toIndex: 6))
+            soundID = val.subArray(fromIndex: 2, toIndex: 4).convertToInt16()
+            versionOfPackageID = val.subArray(fromIndex: 4, toIndex: 6).convertToInt16()
             //
             parseData(data)
         }
@@ -178,7 +178,7 @@ struct ResponseSelectCurrentPreset: CommandResponse {
     init(from data: Data) {
         let val = [UInt8](data)
         if val.count == 6 {
-            presetID = CRC16.bytesConvertToInt16(val.subArray(fromIndex: 2, toIndex: 4))
+            presetID = val.subArray(fromIndex: 2, toIndex: 4).convertToInt16()
             //
             parseData(data)
         }
@@ -224,8 +224,8 @@ struct ResponseReadCAN: CommandResponse {
     init(from data: Data) {
         let val = [UInt8](data)
         if val.count == 8 {
-            idCAN = CRC16.bytesConvertToInt16(val.subArray(fromIndex: 2, toIndex: 4))
-            idVersion = CRC16.bytesConvertToInt16(val.subArray(fromIndex: 4, toIndex: 6))
+            idCAN = val.subArray(fromIndex: 2, toIndex: 4).convertToInt16()
+            idVersion = val.subArray(fromIndex: 4, toIndex: 6).convertToInt16()
             //
             parseData(data)
         }
@@ -245,9 +245,9 @@ struct ResponsePoyling: CommandResponse {
     init(from data: Data) {
         let val = [UInt8](data)
         if val.count == 8 {
-            let byte2 = CRC16.bytesConvertToInt16(val.subArray(fromIndex: 2, toIndex: 4))
+            let byte2 = val.subArray(fromIndex: 2, toIndex: 4).convertToInt16()
             state = PeripheralState(rawValue: byte2)
-            percent = CRC16.bytesConvertToInt16(val.subArray(fromIndex: 4, toIndex: 6))
+            percent = val.subArray(fromIndex: 4, toIndex: 6).convertToInt16()
             //
             parseData(data)
         }

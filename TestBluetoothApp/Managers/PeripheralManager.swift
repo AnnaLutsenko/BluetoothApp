@@ -90,7 +90,7 @@ extension PeripheralManager: CBPeripheralDelegate {
             }
             else if command[0] == ResponseFactory.errorCode
             {
-                let u16 = CRC16.bytesConvertToInt16(command)
+                let u16 = command.convertToInt16()
                 debugPrint("ERROR -----> \(PeripheralError.init(rawValue: u16))")
                 request.failure(PeripheralError.init(rawValue: u16))
             }

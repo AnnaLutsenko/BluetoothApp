@@ -49,6 +49,14 @@ extension Array where Element == UInt8 {
         return string
     }
     
+    // GET Int16 from two bytes UInt8
+    func convertToInt16() -> UInt16 {
+        let u16 = UnsafePointer(self).withMemoryRebound(to: UInt16.self, capacity: 1) {
+            $0.pointee
+        }
+        return u16.bigEndian
+    }
+    
     func subArray(fromIndex:Int, toIndex: Int) -> [UInt8] {
         return Array(self[fromIndex..<toIndex])
     }

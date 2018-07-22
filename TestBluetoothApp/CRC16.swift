@@ -45,14 +45,4 @@ class CRC16 {
         return accumulator
     }
     
-    
-    
-    
-    // GET Int16 from two bytes UInt8
-    static func bytesConvertToInt16(_ bytes: [UInt8]) -> UInt16 {
-        let u16 = UnsafePointer(bytes).withMemoryRebound(to: UInt16.self, capacity: 1) {
-            $0.pointee
-        }
-        return u16.bigEndian
-    }
 }
