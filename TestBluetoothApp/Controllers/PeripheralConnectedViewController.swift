@@ -84,6 +84,17 @@ class PeripheralConnectedViewController: UIViewController, StoryboardInstance {
         })
     }
     
+    
+    @IBAction func startPlaySound() {
+        
+        peripheralManager?.bleRequestManager.startPlaySound(id: [UInt16(8), UInt16(44)], success: { (resp) in
+            debugPrint("---- Success start playing sound ----")
+            debugPrint(resp)
+        }, failure: { (error) in
+            debugPrint(error.localizedDescription)
+        })
+    }
+    
     @IBAction func selectPresets(_ sender: UIButton) {
         peripheralManager?.bleRequestManager.selectCurrentPreset(id: UInt16(8), success: { (resp) in
             debugPrint("---- Success select presets ----")

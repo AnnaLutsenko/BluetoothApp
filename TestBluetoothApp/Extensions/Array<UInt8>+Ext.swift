@@ -8,6 +8,17 @@
 
 import UIKit
 
+extension Array where Element == UInt16 {
+    
+    func convertToUInt8() -> [UInt8] {
+        var arrUInt8 = [UInt8]()
+        for u16 in self {
+            arrUInt8.append(u16.convertToUInt8())
+        }
+        return arrUInt8
+    }
+}
+
 extension Array where Element == UInt8 {
     
     func toDataWithCRC() -> Data {
@@ -24,6 +35,18 @@ extension Array where Element == UInt8 {
         dataToSend.append(crc16InUInt8[1])
         //
         return NSData(bytes: dataToSend, length: dataToSend.count) as Data
+    }
+    
+    /// GET HEX from bytes in UInt8
+    func convertToHEX() -> String {
+        var string = ""
+        
+        for val in self {
+            //getBytes(&byte, range: NSMakeRange(i, 1))
+            string = string + String(format: "%02X", val)
+        }
+        
+        return string
     }
     
     func subArray(fromIndex:Int, toIndex: Int) -> [UInt8] {

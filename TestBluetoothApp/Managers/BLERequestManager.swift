@@ -39,6 +39,18 @@ class BLERequestManager {
         }, failure: failure)
     }
     
+    func startPlaySound(id: [UInt16], success: @escaping ((ResponseStartPlaySound) -> Void), failure: @escaping BLERequest.Failure) {
+        
+        peripheralManager.run(command: StartPlaySound(soundID: id), success: { (commandResponse) in
+            guard let resp = commandResponse as? ResponseStartPlaySound else {
+                failure(PeripheralError.unknownError)
+                return
+            }
+            
+            success(resp)
+        }, failure: failure)
+    }
+    
     func readPresets(completion: @escaping ((ResponseReadPresets) -> Void), failure: @escaping BLERequest.Failure) {
         
         peripheralManager.run(command: ReadPresets(), success: { (commandResponse) in

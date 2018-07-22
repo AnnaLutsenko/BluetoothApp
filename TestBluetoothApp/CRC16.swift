@@ -45,17 +45,8 @@ class CRC16 {
         return accumulator
     }
     
-    // GET HEX from bytes in UInt8
-    static func bytesConvertToHexString(_ bytes: [UInt8]) -> String {
-        var string = ""
-        
-        for val in bytes {
-            //getBytes(&byte, range: NSMakeRange(i, 1))
-            string = string + String(format: "%02X", val)
-        }
-        
-        return string
-    }
+    
+    
     
     // GET Int16 from two bytes UInt8
     static func bytesConvertToInt16(_ bytes: [UInt8]) -> UInt16 {

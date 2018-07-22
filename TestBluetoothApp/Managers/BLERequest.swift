@@ -36,12 +36,12 @@ class BLERequest {
         let previousByte = bytes[bytes.count-2]
         let lastByte = bytes[bytes.count-1]
         
-        let hexValCRC16 = CRC16.bytesConvertToHexString([previousByte, lastByte])
+        let hexValCRC16 = [previousByte, lastByte].convertToHEX()
         //
         let data = Array(bytes.prefix(bytes.count-2)) // data without CRC16
         guard let modbusValue = CRC16.crc16(data, type: .MODBUS) else { return false } // get CRC16 from data
         //
-        let modbusStr = String(format: "%4X", modbusValue)
+        let modbusStr = modbusValue.convertToUInt8().convertToHEX()
         debugPrint("MODBUS = \(modbusStr)")
         debugPrint("CRC16 = \(hexValCRC16)")
         //

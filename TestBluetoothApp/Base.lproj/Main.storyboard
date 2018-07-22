@@ -157,6 +157,16 @@
                                     <action selector="readCAN:" destination="FAw-uD-W23" eventType="touchUpInside" id="B5u-dq-59W"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" reversesTitleShadowWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="he7-7f-URi">
+                                <rect key="frame" x="16" y="253" width="108" height="33"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="17"/>
+                                <state key="normal" title="Delete sound">
+                                    <color key="titleColor" red="0.61568627450000002" green="0.70980392160000005" blue="0.94117647059999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="deleteSound" destination="FAw-uD-W23" eventType="touchUpInside" id="2vh-Vt-LYU"/>
+                                </connections>
+                            </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" reversesTitleShadowWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MVb-7m-Ebn">
                                 <rect key="frame" x="188" y="171" width="171" height="33"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="17"/>
@@ -198,21 +208,23 @@
                                     <action selector="muteON:" destination="FAw-uD-W23" eventType="touchUpInside" id="zJ9-l2-LTS"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" reversesTitleShadowWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="he7-7f-URi">
-                                <rect key="frame" x="16" y="253" width="108" height="33"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" reversesTitleShadowWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dUk-HU-O2h">
+                                <rect key="frame" x="16" y="294" width="90" height="33"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="17"/>
-                                <state key="normal" title="Delete sound">
+                                <state key="normal" title="Play sound">
                                     <color key="titleColor" red="0.61568627450000002" green="0.70980392160000005" blue="0.94117647059999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                                 <connections>
-                                    <action selector="deleteSound" destination="FAw-uD-W23" eventType="touchUpInside" id="2vh-Vt-LYU"/>
+                                    <action selector="startPlaySound" destination="FAw-uD-W23" eventType="touchUpInside" id="osM-4O-0Fw"/>
                                 </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstItem="dUk-HU-O2h" firstAttribute="leading" secondItem="he7-7f-URi" secondAttribute="leading" id="067-bf-5vG"/>
                             <constraint firstItem="cFn-h6-Eq0" firstAttribute="trailing" secondItem="MVb-7m-Ebn" secondAttribute="trailing" constant="16" id="3nK-AZ-0oy"/>
                             <constraint firstItem="wVf-6y-dmM" firstAttribute="top" secondItem="kMG-xq-y1W" secondAttribute="bottom" constant="8" id="4DO-4z-oJR"/>
+                            <constraint firstItem="dUk-HU-O2h" firstAttribute="top" secondItem="he7-7f-URi" secondAttribute="bottom" constant="8" id="7Ry-4P-1dw"/>
                             <constraint firstItem="vi3-rc-VSp" firstAttribute="leading" secondItem="9xS-ZX-fZU" secondAttribute="trailing" constant="16" id="7l0-z5-hf5"/>
                             <constraint firstItem="fpJ-EL-BH5" firstAttribute="trailing" secondItem="kMG-xq-y1W" secondAttribute="trailing" id="EGy-wO-alp"/>
                             <constraint firstItem="yja-42-brZ" firstAttribute="top" secondItem="wVf-6y-dmM" secondAttribute="bottom" constant="8" id="GNH-cV-x5i"/>
@@ -246,7 +258,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nV0-w8-nOI" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1554" y="110"/>
+            <point key="canvasLocation" x="1598" y="134"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="NkO-cL-Wuw">

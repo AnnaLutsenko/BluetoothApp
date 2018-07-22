@@ -21,7 +21,7 @@ enum CommandsU16: UInt16 {
     case writeSettingsSound = 0x0043   // 4.4 & 7
     case confirmRecordSound = 0x0044   // 4.5 Confirming the recording / updating of the sound package in the device //TODO: command
     //
-    case startListenSample  = 0x0020   // 6
+    case startPlaySample    = 0x0020   // 6
     case stopListenSample   = 0x0021   // 6
     //
     case deleteSound    = 0x0046        // 5
@@ -69,7 +69,6 @@ struct ResponseReadParameters: CommandResponse {
         
         if val.count == 10 {
             //
-            let hexValCommand = CRC16.bytesConvertToInt16(val.subArray(fromIndex: 0, toIndex: 2))
             serialNumber = CRC16.bytesConvertToInt16(val.subArray(fromIndex: 2, toIndex: 4))
             firmware = CRC16.bytesConvertToInt16(val.subArray(fromIndex: 4, toIndex: 6))
             hardware = CRC16.bytesConvertToInt16(val.subArray(fromIndex: 6, toIndex: 8))
@@ -77,7 +76,6 @@ struct ResponseReadParameters: CommandResponse {
             print("HEX serial number = \(serialNumber)")
             print("u16 version FW = \(firmware)")
             print("u16 version HW = \(hardware)")
-            print("HEX command = \(hexValCommand)")
             //
             parseData(data)
         }
@@ -87,7 +85,6 @@ struct ResponseReadParameters: CommandResponse {
 /// 5 - Удаление звукового пакета из устройства
 struct DeleteSound: CommandProtocol {
     var u16Command: CommandsU16 = .deleteSound
-    
     var data: Data
     
     init(soundID: UInt16) {
@@ -103,6 +100,35 @@ struct ResponseDeleteSound: CommandResponse {
     
     init(from data: Data) {
         parseData(data)
+    }
+}
+
+/// 6 - Прослушивание тестового сэмпла звукового пакета на устройстве
+struct StartPlaySound: CommandProtocol {
+    var u16Command: CommandsU16 = .startPlaySample
+    var data: Data
+    
+    init(soundID: [UInt16]) {
+        var commandArr = u16Command.arrU8
+        let u8ID = soundID.convertToUInt8()
+        commandArr.append(u8ID)
+        data = commandArr.toDataWithCRC()
+        print("Start Play sound: \(data.convertToHEX()))")
+    }
+}
+
+struct ResponseStartPlaySound: CommandResponse {
+    var soundID = UInt16.min
+    var versionOfPackageID = UInt16.min
+    
+    init(from data: Data) {
+        let val = [UInt8](data)
+        if val.count == 8 {
+            soundID = CRC16.bytesConvertToInt16(val.subArray(fromIndex: 2, toIndex: 4))
+            versionOfPackageID = CRC16.bytesConvertToInt16(val.subArray(fromIndex: 4, toIndex: 6))
+            //
+            parseData(data)
+        }
     }
 }
 
