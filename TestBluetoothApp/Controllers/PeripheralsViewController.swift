@@ -158,8 +158,9 @@ extension PeripheralsViewController: CBCentralManagerDelegate {
     }
     
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
-        
-        peripherals.insert(peripheral)
-        tableView.reloadData()
+        if peripheral.name == "Thor" {
+            peripherals.insert(peripheral)
+            tableView.reloadData()
+        }
     }
 }

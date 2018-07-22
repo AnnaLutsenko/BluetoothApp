@@ -74,6 +74,16 @@ class PeripheralConnectedViewController: UIViewController, StoryboardInstance {
         })
     }
     
+    @IBAction func deleteSound() {
+        
+        peripheralManager?.bleRequestManager.deleteSound(id: UInt16(8), success: { (resp) in
+            debugPrint("---- Success Delete Sounds ----")
+            debugPrint(resp)
+        }, failure: { (error) in
+            debugPrint(error.localizedDescription)
+        })
+    }
+    
     @IBAction func selectPresets(_ sender: UIButton) {
         peripheralManager?.bleRequestManager.selectCurrentPreset(id: UInt16(8), success: { (resp) in
             debugPrint("---- Success select presets ----")

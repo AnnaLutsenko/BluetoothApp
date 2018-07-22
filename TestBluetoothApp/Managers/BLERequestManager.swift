@@ -15,10 +15,22 @@ class BLERequestManager {
         self.peripheralManager = peripheralManager
     }
     
-    func selectCurrentPreset(id: UInt16, success: @escaping ((Data) -> Void), failure: @escaping BLERequest.Failure) {
+    func selectCurrentPreset(id: UInt16, success: @escaping ((ResponseSelectCurrentPreset) -> Void), failure: @escaping BLERequest.Failure) {
         
         peripheralManager.run(command: SelectCurrentPreset(presetID: id), success: { (commandResponse) in
-            guard let resp = commandResponse as? Data else {
+            guard let resp = commandResponse as? ResponseSelectCurrentPreset else {
+                failure(PeripheralError.unknownError)
+                return
+            }
+            
+            success(resp)
+        }, failure: failure)
+    }
+    
+    func deleteSound(id: UInt16, success: @escaping ((ResponseDeleteSound) -> Void), failure: @escaping BLERequest.Failure) {
+        
+        peripheralManager.run(command: DeleteSound(soundID: id), success: { (commandResponse) in
+            guard let resp = commandResponse as? ResponseDeleteSound else {
                 failure(PeripheralError.unknownError)
                 return
             }

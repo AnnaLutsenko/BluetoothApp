@@ -56,4 +56,8 @@ extension Array where Element == UInt8 {
     func subArray(fromIndex:Int, toIndex: Int) -> [UInt8] {
         return Array(self[fromIndex..<toIndex])
     }
+    
+    mutating func append(_ array: [UInt8]) {
+        self = self + array
+    }
 }

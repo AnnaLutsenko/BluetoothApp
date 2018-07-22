@@ -26,6 +26,8 @@ extension ResponseCreator {
         switch commandSecondByte {
         case CommandsU16.readParameters.secondByte:
             return ResponseReadParameters(from: data)
+        case CommandsU16.deleteSound.secondByte:
+            return ResponseDeleteSound(from: data)
         case CommandsU16.readPresets.secondByte:
             return ResponseReadPresets(from: data)
         case CommandsU16.selectPreset.secondByte:

@@ -1,3 +1,4 @@
+
 //
 //  Commands.swift
 //  TestBluetoothApp
@@ -83,6 +84,28 @@ struct ResponseReadParameters: CommandResponse {
     }
 }
 
+/// 5 - Удаление звукового пакета из устройства
+struct DeleteSound: CommandProtocol {
+    var u16Command: CommandsU16 = .deleteSound
+    
+    var data: Data
+    
+    init(soundID: UInt16) {
+        var commandArr = u16Command.arrU8
+        let u8ID = soundID.convertToUInt8()
+        commandArr.append(u8ID)
+        data = commandArr.toDataWithCRC()
+        print("Delete sound: \(data.convertToHEX()))")
+    }
+}
+
+struct ResponseDeleteSound: CommandResponse {
+    
+    init(from data: Data) {
+        parseData(data)
+    }
+}
+
 /// 8 - Чтение ID установленных звуковых пакетов
 struct ReadIDSounds: CommandProtocol {
     var u16Command: CommandsU16 = .readIDSounds
@@ -112,23 +135,27 @@ struct ResponseReadPresets: CommandResponse {
 /// 11 - Выбор текущего Пресета в устройстве
 struct SelectCurrentPreset: CommandProtocol {
     var u16Command: CommandsU16 = .selectPreset
-    
     var data: Data
     
     init(presetID: UInt16) {
         var commandArr = u16Command.arrU8
         let u8ID = presetID.convertToUInt8()
-        commandArr.append(u8ID[0])
-        commandArr.append(u8ID[1])
+        commandArr.append(u8ID)
         data = commandArr.toDataWithCRC()
         print("Select current preset: \(data.convertToHEX()))")
     }
 }
 
 struct ResponseSelectCurrentPreset: CommandResponse {
+    var presetID = UInt16.min
+    
     init(from data: Data) {
-        parseData(data)
-        //
+        let val = [UInt8](data)
+        if val.count == 6 {
+            presetID = CRC16.bytesConvertToInt16(val.subArray(fromIndex: 2, toIndex: 4))
+            //
+            parseData(data)
+        }
     }
 }
 
