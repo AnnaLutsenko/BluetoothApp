@@ -86,18 +86,22 @@ extension PeripheralManager: CBPeripheralDelegate {
             if !request.isDataFull(value)
             {
                 debugPrint("Data is not full! \(value.convertToHEX())")
-                request.failure(PeripheralError.dataNotComplete)
+                request.failure(RequestError.dataNotComplete)
             }
             else if command[0] == ResponseFactory.errorCode
             {
                 let u16 = command.convertToInt16()
-                debugPrint("ERROR -----> \(PeripheralError.init(rawValue: u16))")
-                request.failure(PeripheralError.init(rawValue: u16))
+                debugPrint("ERROR -----> \(PeripheralError.error(with: u16))")
+                request.failure(PeripheralError.error(with: u16))
             }
             else
             {
-                let response = ResponseFactory.getCommandResponse(value)
-                request.success(response)
+                do {
+                    let response = try ResponseFactory.getCommandResponse(value)
+                    request.success(response)
+                } catch let error {
+                    request.failure(error)
+                }
             }
             
             bleRequests = bleRequests.filter { $0 !== request }

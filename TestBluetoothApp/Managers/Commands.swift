@@ -59,11 +59,11 @@ struct ReadParameters: CommandProtocol {
 }
 
 struct ResponseReadParameters: CommandResponse {
-    var serialNumber = UInt16.min
-    var firmware = UInt16.min
-    var hardware = UInt16.min
+    var serialNumber: UInt16
+    var firmware: UInt16
+    var hardware: UInt16
     
-    init(from data: Data) {
+    init(from data: Data) throws {
         //
         let val = [UInt8](data)
         
@@ -78,6 +78,8 @@ struct ResponseReadParameters: CommandResponse {
             print("u16 version HW = \(hardware)")
             //
             parseData(data)
+        } else {
+            throw RequestError.dataNotComplete
         }
     }
 }

@@ -44,8 +44,8 @@ class FirmwareManager {
                     let data = try Data(contentsOf: URL(fileURLWithPath: tempLocalUrl.path), options: .dataReadingMapped)
                     print("Successfully get data: \(data); \(data.count)")
                     success(data)
-                } catch {
-                    failure(RequestError.wrongData)
+                } catch let error {
+                    failure(error)
                 }
                 
             }

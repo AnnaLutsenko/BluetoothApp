@@ -9,23 +9,24 @@
 import Foundation
 
 struct ResponseFactory: ResponseCreator {
+    
     static let errorCode = UInt8(0x80)
     
 }
 
 protocol ResponseCreator {
-    static func getCommandResponse(_ data: Data) -> CommandResponse
+    static func getCommandResponse(_ data: Data) throws -> CommandResponse
 }
 
 extension ResponseCreator {
     
-    static func getCommandResponse(_ data: Data) -> CommandResponse {
+    static func getCommandResponse(_ data: Data) throws -> CommandResponse {
         let command = Array([UInt8](data).prefix(2))
         let commandSecondByte = command[1]
         
         switch commandSecondByte {
         case CommandsU16.readParameters.secondByte:
-            return ResponseReadParameters(from: data)
+            return try ResponseReadParameters(from: data)
         case CommandsU16.deleteSound.secondByte:
             return ResponseDeleteSound(from: data)
         case CommandsU16.startPlaySample.secondByte:

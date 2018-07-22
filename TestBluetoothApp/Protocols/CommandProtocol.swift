@@ -9,7 +9,7 @@
 import Foundation
 
 protocol CommandResponse {
-    init(from data: Data)
+    init(from data: Data) throws
     func parseData(_ data: Data)
 }
 

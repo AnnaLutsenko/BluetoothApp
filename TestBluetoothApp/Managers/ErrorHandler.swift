@@ -11,6 +11,9 @@ import Foundation
 
 enum RequestError: Error {
     case wrongData
+    case unexpectedResponse
+    case dataNotComplete
+    case parsingError
     case unknownError
     
     var localizedDescription: String {
@@ -45,32 +48,8 @@ enum PeripheralError: UInt16, Error {
     case readOfCANFailed            = 0x804A // 14
     case parametersNotSetToCAN      = 0x804B // 15
     
-    case unknownError
-    case dataNotComplete
-    
-    init(rawValue: UInt16) {
-        
-        switch rawValue {
-        case PeripheralError.firmwareNotInstalled.rawValue: self = .firmwareNotInstalled
-        case PeripheralError.soundNotWriting.rawValue: self = .soundNotWriting
-        case PeripheralError.rulesOfSoundNotWriting.rawValue: self = .rulesOfSoundNotWriting
-        case PeripheralError.rulesOfSampleNotWriting.rawValue: self = .rulesOfSampleNotWriting
-        case PeripheralError.deviceIsNotReady.rawValue: self = .deviceIsNotReady
-        case PeripheralError.audioIsNotInstalled.rawValue: self = .audioIsNotInstalled
-        case PeripheralError.sampleIsNotInDevice.rawValue: self = .sampleIsNotInDevice
-        case PeripheralError.sampleIsNotPlayed.rawValue: self = .sampleIsNotPlayed
-        case PeripheralError.soundPackageNotInstalled.rawValue: self = .soundPackageNotInstalled
-        case PeripheralError.presetsIsNotInstalled.rawValue: self = .presetsIsNotInstalled
-            
-        case PeripheralError.presetNotWriting.rawValue: self = .presetNotWriting
-        case PeripheralError.presetNotInstalled.rawValue: self = .presetNotInstalled
-        case PeripheralError.alreadyInMute.rawValue: self = .alreadyInMute
-        case PeripheralError.notInMute.rawValue: self = .notInMute
-        case PeripheralError.readOfCANFailed.rawValue: self = .readOfCANFailed
-        case PeripheralError.parametersNotSetToCAN.rawValue: self = .parametersNotSetToCAN
-            
-        default: self = .unknownError
-        }
+    static func error(with code: UInt16) -> Error {
+        return PeripheralError(rawValue: code) ?? RequestError.unexpectedResponse
     }
     
     var localizedDescription: String {
@@ -107,9 +86,6 @@ enum PeripheralError: UInt16, Error {
             return "The CAN configuration on the device failed"
         case .parametersNotSetToCAN:
             return "The device can not set CAN parameters"
-            
-        default:
-            return "Ops! Something went wrong. Could you try later."
         }
     }
 }

@@ -19,7 +19,7 @@ class BLERequestManager {
         
         peripheralManager.run(command: SelectCurrentPreset(presetID: id), success: { (commandResponse) in
             guard let resp = commandResponse as? ResponseSelectCurrentPreset else {
-                failure(PeripheralError.unknownError)
+                failure(RequestError.unexpectedResponse)
                 return
             }
             
@@ -31,7 +31,7 @@ class BLERequestManager {
         
         peripheralManager.run(command: DeleteSound(soundID: id), success: { (commandResponse) in
             guard let resp = commandResponse as? ResponseDeleteSound else {
-                failure(PeripheralError.unknownError)
+                failure(RequestError.unexpectedResponse)
                 return
             }
             
@@ -43,7 +43,7 @@ class BLERequestManager {
         
         peripheralManager.run(command: StartPlaySound(soundID: id), success: { (commandResponse) in
             guard let resp = commandResponse as? ResponseStartPlaySound else {
-                failure(PeripheralError.unknownError)
+                failure(RequestError.unexpectedResponse)
                 return
             }
             
@@ -55,7 +55,7 @@ class BLERequestManager {
         
         peripheralManager.run(command: StopListenSample(), success: { (commandResponse) in
             guard let resp = commandResponse as? ResponseStopListenSample else {
-                failure(PeripheralError.unknownError)
+                failure(RequestError.unexpectedResponse)
                 return
             }
             
@@ -67,7 +67,7 @@ class BLERequestManager {
         
         peripheralManager.run(command: ReadPresets(), success: { (commandResponse) in
             guard let resp = commandResponse as? ResponseReadPresets else {
-                failure(PeripheralError.unknownError)
+                failure(RequestError.unexpectedResponse)
                 return
             }
             
@@ -79,7 +79,7 @@ class BLERequestManager {
         
         peripheralManager.run(command: ReadIDSounds(), success: { (commandResponse) in
             guard let resp = commandResponse as? ResponseReadIDSounds else {
-                failure(PeripheralError.unknownError)
+                failure(RequestError.unexpectedResponse)
                 return
             }
             
@@ -92,7 +92,7 @@ class BLERequestManager {
         peripheralManager.run(command: ReadParameters(), success: { (commandResponse) in
             
             guard let resp = commandResponse as? ResponseReadParameters else {
-                failure(PeripheralError.unknownError)
+                failure(RequestError.unexpectedResponse)
                 return
             }
             success(resp)
@@ -107,7 +107,7 @@ class BLERequestManager {
         peripheralManager.run(command: ReadCAN(), success: { (commandResponse) in
             guard let resp = commandResponse as? ResponseReadCAN else {
                 // TODO: Throw error or failure()
-                failure(PeripheralError.unknownError)
+                failure(RequestError.unexpectedResponse)
                 return
             }
             
@@ -120,7 +120,7 @@ class BLERequestManager {
         peripheralManager.run(command: MuteOn(), success: { (commandResponse) in
             
             guard let resp = commandResponse as? ResponseMuteOn else {
-                failure(PeripheralError.unknownError)
+                failure(RequestError.unexpectedResponse)
                 return
             }
             success(resp)
@@ -133,7 +133,7 @@ class BLERequestManager {
         peripheralManager.run(command: MuteOff(), success: { (commandResponse) in
             
             guard let resp = commandResponse as? ResponseMuteOff else {
-                failure(PeripheralError.unknownError)
+                failure(RequestError.unexpectedResponse)
                 return
             }
             success(resp)
@@ -146,7 +146,7 @@ class BLERequestManager {
         peripheralManager.run(command: Poyling(), success: { (commandResponse) in
             
             guard let resp = commandResponse as? ResponsePoyling else {
-                failure(PeripheralError.unknownError)
+                failure(RequestError.unexpectedResponse)
                 return
             }
             success(resp)
