@@ -132,6 +132,17 @@ struct ResponseStartPlaySound: CommandResponse {
     }
 }
 
+struct StopListenSample: CommandProtocol {
+    var u16Command: CommandsU16 = .stopListenSample
+    var data = CommandsU16.stopListenSample.arrU8.toDataWithCRC()
+}
+
+struct ResponseStopListenSample: CommandResponse {
+    init(from data: Data) {
+        parseData(data)
+    }
+}
+
 /// 8 - Чтение ID установленных звуковых пакетов
 struct ReadIDSounds: CommandProtocol {
     var u16Command: CommandsU16 = .readIDSounds
@@ -141,7 +152,6 @@ struct ReadIDSounds: CommandProtocol {
 struct ResponseReadIDSounds: CommandResponse {
     init(from data: Data) {
         parseData(data)
-        //
     }
 }
 

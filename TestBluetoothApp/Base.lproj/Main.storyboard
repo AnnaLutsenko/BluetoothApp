@@ -167,6 +167,16 @@
                                     <action selector="deleteSound" destination="FAw-uD-W23" eventType="touchUpInside" id="2vh-Vt-LYU"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" reversesTitleShadowWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dUk-HU-O2h">
+                                <rect key="frame" x="16" y="294" width="90" height="33"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="17"/>
+                                <state key="normal" title="Play sound">
+                                    <color key="titleColor" red="0.61568627450000002" green="0.70980392160000005" blue="0.94117647059999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="startPlaySound" destination="FAw-uD-W23" eventType="touchUpInside" id="osM-4O-0Fw"/>
+                                </connections>
+                            </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" reversesTitleShadowWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MVb-7m-Ebn">
                                 <rect key="frame" x="188" y="171" width="171" height="33"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="17"/>
@@ -208,14 +218,14 @@
                                     <action selector="muteON:" destination="FAw-uD-W23" eventType="touchUpInside" id="zJ9-l2-LTS"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" reversesTitleShadowWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dUk-HU-O2h">
-                                <rect key="frame" x="16" y="294" width="90" height="33"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" reversesTitleShadowWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eMU-pM-cZj">
+                                <rect key="frame" x="122" y="294" width="131" height="33"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="17"/>
-                                <state key="normal" title="Play sound">
+                                <state key="normal" title="Stop play sound">
                                     <color key="titleColor" red="0.61568627450000002" green="0.70980392160000005" blue="0.94117647059999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                                 <connections>
-                                    <action selector="startPlaySound" destination="FAw-uD-W23" eventType="touchUpInside" id="osM-4O-0Fw"/>
+                                    <action selector="stopPlaySound" destination="FAw-uD-W23" eventType="touchUpInside" id="qlc-8q-PCJ"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -242,9 +252,11 @@
                             <constraint firstItem="yja-42-brZ" firstAttribute="leading" secondItem="wVf-6y-dmM" secondAttribute="leading" id="f09-TS-zfi"/>
                             <constraint firstItem="kMG-xq-y1W" firstAttribute="top" secondItem="cFn-h6-Eq0" secondAttribute="top" constant="8" id="fMA-7P-qiv"/>
                             <constraint firstItem="38I-Sf-r9M" firstAttribute="top" secondItem="yja-42-brZ" secondAttribute="bottom" constant="8" id="fzM-bu-Zo8"/>
+                            <constraint firstItem="eMU-pM-cZj" firstAttribute="leading" secondItem="dUk-HU-O2h" secondAttribute="trailing" constant="16" id="lEs-8y-IeI"/>
                             <constraint firstItem="he7-7f-URi" firstAttribute="leading" secondItem="dU5-Na-fgu" secondAttribute="leading" id="oHZ-Ip-GjJ"/>
                             <constraint firstItem="XOv-W5-fmr" firstAttribute="leading" secondItem="38I-Sf-r9M" secondAttribute="leading" id="rdD-zS-lOe"/>
                             <constraint firstItem="he7-7f-URi" firstAttribute="top" secondItem="dU5-Na-fgu" secondAttribute="bottom" constant="8" id="sbQ-oB-GPT"/>
+                            <constraint firstItem="eMU-pM-cZj" firstAttribute="centerY" secondItem="dUk-HU-O2h" secondAttribute="centerY" id="vAv-7g-yLm"/>
                             <constraint firstItem="cFn-h6-Eq0" firstAttribute="trailing" secondItem="vi3-rc-VSp" secondAttribute="trailing" constant="16" id="vFI-ZI-icJ"/>
                             <constraint firstItem="38I-Sf-r9M" firstAttribute="leading" secondItem="yja-42-brZ" secondAttribute="leading" id="z7n-Yz-LFc"/>
                             <constraint firstItem="cFn-h6-Eq0" firstAttribute="trailing" secondItem="kMG-xq-y1W" secondAttribute="trailing" constant="16" id="zmW-SN-dhB"/>

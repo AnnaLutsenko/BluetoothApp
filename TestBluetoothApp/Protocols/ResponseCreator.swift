@@ -30,6 +30,8 @@ extension ResponseCreator {
             return ResponseDeleteSound(from: data)
         case CommandsU16.startPlaySample.secondByte:
             return ResponseStartPlaySound(from: data)
+        case CommandsU16.stopListenSample.secondByte:
+            return ResponseStopListenSample(from: data)
         case CommandsU16.readPresets.secondByte:
             return ResponseReadPresets(from: data)
         case CommandsU16.selectPreset.secondByte:
