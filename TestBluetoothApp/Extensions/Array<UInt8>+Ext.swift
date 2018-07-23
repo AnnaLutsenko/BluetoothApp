@@ -17,6 +17,10 @@ extension Array where Element == UInt16 {
         }
         return arrUInt8
     }
+    
+    func subArray(fromIndex:Int, toIndex: Int) -> [UInt16] {
+        return Array(self[fromIndex..<toIndex])
+    }
 }
 
 extension Array where Element == UInt8 {
@@ -55,6 +59,21 @@ extension Array where Element == UInt8 {
             $0.pointee
         }
         return u16.bigEndian
+    }
+    
+    // GET Array of UInt16 from array of UInt8
+    func convertToArrUInt16() -> [UInt16]? {
+        let numBytes = self.count
+        var byteArrSlice = self[0..<numBytes]
+        
+        guard numBytes % 2 == 0 else { return nil }
+        
+        var arr = [UInt16](repeating: 0, count: numBytes/2)
+        for i in (0..<numBytes/2).reversed() {
+            arr[i] = UInt16(byteArrSlice.removeLast()) +
+                UInt16(byteArrSlice.removeLast()) << 8
+        }
+        return arr
     }
     
     func subArray(fromIndex:Int, toIndex: Int) -> [UInt8] {

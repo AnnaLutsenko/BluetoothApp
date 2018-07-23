@@ -57,7 +57,7 @@ class PeripheralConnectedViewController: UIViewController, StoryboardInstance {
         }
         guard let crc16InUInt8 = dataInCRC16?.convertToUInt8() else {return}
         //
-        let dataToSend = [val[0], val[1], crc16InUInt8[0], crc16InUInt8[1]]
+        let dataToSend = val + [crc16InUInt8[0], crc16InUInt8[1]]
         let nsData = NSData(bytes: dataToSend, length: dataToSend.count) as Data
         //
         peripheral.writeValue(nsData,  for: arrayReadWriteChar[0], type: .withoutResponse)
@@ -117,6 +117,16 @@ class PeripheralConnectedViewController: UIViewController, StoryboardInstance {
     @IBAction func readPresets(_ sender: UIButton) {
         peripheralManager?.bleRequestManager.readPresets(completion: { (resp) in
             debugPrint("---- Success read Presets ----")
+            debugPrint(resp)
+        }, failure: { (error) in
+            debugPrint(error)
+        })
+    }
+    
+    @IBAction func writePresets(_ sender: UIButton) {
+        let preset = PresetModel(soundPackageID: UInt16(21), modeID: UInt16(45), activity:  UInt16(22))
+        peripheralManager?.bleRequestManager.writePresets(presetID: UInt16(8), presetsArr: [preset], success: { (resp) in
+            debugPrint("---- Success write Presets ----")
             debugPrint(resp)
         }, failure: { (error) in
             debugPrint(error)

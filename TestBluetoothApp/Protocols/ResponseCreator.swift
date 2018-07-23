@@ -34,7 +34,9 @@ extension ResponseCreator {
         case CommandsU16.stopListenSample.secondByte:
             return ResponseStopListenSample(from: data)
         case CommandsU16.readPresets.secondByte:
-            return ResponseReadPresets(from: data)
+            return try ResponseReadPresets(from: data)
+        case CommandsU16.writePresets.secondByte:
+            return ResponseWritePresets(from: data)
         case CommandsU16.selectPreset.secondByte:
             return try ResponseSelectCurrentPreset(from: data)
         case CommandsU16.readIDSounds.secondByte:

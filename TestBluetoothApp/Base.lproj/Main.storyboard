@@ -184,7 +184,6 @@
                                     <color key="titleColor" red="0.61568627450000002" green="0.70980392160000005" blue="0.94117647059999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                                 <connections>
-                                    <action selector="readCAN:" destination="FAw-uD-W23" eventType="touchUpInside" id="Dcn-vF-Q9g"/>
                                     <action selector="selectPresets:" destination="FAw-uD-W23" eventType="touchUpInside" id="uON-te-K4B"/>
                                 </connections>
                             </button>
@@ -228,6 +227,16 @@
                                     <action selector="stopPlaySound" destination="FAw-uD-W23" eventType="touchUpInside" id="qlc-8q-PCJ"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" reversesTitleShadowWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Nf2-k4-V08">
+                                <rect key="frame" x="16" y="335" width="109" height="33"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="17"/>
+                                <state key="normal" title="Write Presets">
+                                    <color key="titleColor" red="0.61568627450000002" green="0.70980392160000005" blue="0.94117647059999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="writePresets:" destination="FAw-uD-W23" eventType="touchUpInside" id="MNe-id-Gf5"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
@@ -252,8 +261,10 @@
                             <constraint firstItem="yja-42-brZ" firstAttribute="leading" secondItem="wVf-6y-dmM" secondAttribute="leading" id="f09-TS-zfi"/>
                             <constraint firstItem="kMG-xq-y1W" firstAttribute="top" secondItem="cFn-h6-Eq0" secondAttribute="top" constant="8" id="fMA-7P-qiv"/>
                             <constraint firstItem="38I-Sf-r9M" firstAttribute="top" secondItem="yja-42-brZ" secondAttribute="bottom" constant="8" id="fzM-bu-Zo8"/>
+                            <constraint firstItem="Nf2-k4-V08" firstAttribute="leading" secondItem="dUk-HU-O2h" secondAttribute="leading" id="kaE-TO-ZWI"/>
                             <constraint firstItem="eMU-pM-cZj" firstAttribute="leading" secondItem="dUk-HU-O2h" secondAttribute="trailing" constant="16" id="lEs-8y-IeI"/>
                             <constraint firstItem="he7-7f-URi" firstAttribute="leading" secondItem="dU5-Na-fgu" secondAttribute="leading" id="oHZ-Ip-GjJ"/>
+                            <constraint firstItem="Nf2-k4-V08" firstAttribute="top" secondItem="dUk-HU-O2h" secondAttribute="bottom" constant="8" id="oR1-cv-AYO"/>
                             <constraint firstItem="XOv-W5-fmr" firstAttribute="leading" secondItem="38I-Sf-r9M" secondAttribute="leading" id="rdD-zS-lOe"/>
                             <constraint firstItem="he7-7f-URi" firstAttribute="top" secondItem="dU5-Na-fgu" secondAttribute="bottom" constant="8" id="sbQ-oB-GPT"/>
                             <constraint firstItem="eMU-pM-cZj" firstAttribute="centerY" secondItem="dUk-HU-O2h" secondAttribute="centerY" id="vAv-7g-yLm"/>

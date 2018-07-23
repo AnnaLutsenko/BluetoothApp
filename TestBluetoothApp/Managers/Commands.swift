@@ -67,11 +67,12 @@ struct ResponseReadParameters: CommandResponse {
         //
         let val = [UInt8](data)
         
-        if val.count == 10 {
+        if let arrUInt16 = val.convertToArrUInt16(),
+            arrUInt16.count == 5 {
             //
-            serialNumber = val.subArray(fromIndex: 2, toIndex: 4).convertToInt16()
-            firmware = val.subArray(fromIndex: 4, toIndex: 6).convertToInt16()
-            hardware = val.subArray(fromIndex: 6, toIndex: 8).convertToInt16()
+            serialNumber = arrUInt16[1]
+            firmware = arrUInt16[2]
+            hardware = arrUInt16[3]
             //
             print("HEX serial number = \(serialNumber)")
             print("u16 version FW = \(firmware)")
@@ -125,9 +126,11 @@ struct ResponseStartPlaySound: CommandResponse {
     
     init(from data: Data) throws {
         let val = [UInt8](data)
-        if val.count == 8 {
-            soundID = val.subArray(fromIndex: 2, toIndex: 4).convertToInt16()
-            versionOfPackageID = val.subArray(fromIndex: 4, toIndex: 6).convertToInt16()
+        if let arrUInt16 = val.convertToArrUInt16(),
+            arrUInt16.count == 4 {
+            //
+            soundID = arrUInt16[1]
+            versionOfPackageID = arrUInt16[2]
             //
             parseData(data)
         } else {
@@ -166,9 +169,62 @@ struct ReadPresets: CommandProtocol {
 }
 
 struct ResponseReadPresets: CommandResponse {
+    var presetID: UInt16
+    var presetCount: Int
+    var presets: [PresetModel]
+    
+    init(from data: Data) throws {
+        let val = [UInt8](data)
+        if let arrUInt16 = val.convertToArrUInt16(),
+            arrUInt16.count >= 7 {
+            presetID = arrUInt16[1]
+            presetCount = Int(arrUInt16[2])
+            presets = []
+            
+            // array of all presets info (1 preset == 3 elements of array)
+            var arrayOfPresets = arrUInt16.subArray(fromIndex: 3, toIndex: arrUInt16.count-1)
+            
+            if arrayOfPresets.count % 3 == 0 {
+                while arrayOfPresets.count != 0 {
+                    presets.append(PresetModel(soundPackageID: arrayOfPresets[0], modeID: arrayOfPresets[1], activity: arrayOfPresets[2]))
+                    arrayOfPresets.removeFirst(3)
+                }
+            }
+            //
+            parseData(data)
+        } else {
+            throw RequestError.parsingError
+        }
+    }
+}
+
+/// 10 - Запись Пресетoв
+struct WritePresets: CommandProtocol {
+    var u16Command: CommandsU16 = .writePresets
+    var data: Data
+    
+    init(currentPresetID: UInt16, presetsArr: [PresetModel]) {
+        var commandArr = u16Command.arrU8
+        //
+        commandArr.append(currentPresetID.convertToUInt8())
+        commandArr.append(UInt16(presetsArr.count).convertToUInt8())
+        for preset in presetsArr {
+            
+            commandArr.append(preset.soundPackageID.convertToUInt8())
+            commandArr.append(preset.modeID.convertToUInt8())
+            commandArr.append(preset.activity.convertToUInt8())
+
+
+        }
+        //
+        data = commandArr.toDataWithCRC()
+        print("Write presets: \(data.convertToHEX()))")
+    }
+}
+
+struct ResponseWritePresets: CommandResponse {
     init(from data: Data) {
         parseData(data)
-        //
     }
 }
 
@@ -191,8 +247,9 @@ struct ResponseSelectCurrentPreset: CommandResponse {
     
     init(from data: Data) throws {
         let val = [UInt8](data)
-        if val.count == 6 {
-            presetID = val.subArray(fromIndex: 2, toIndex: 4).convertToInt16()
+        if let arrUInt16 = val.convertToArrUInt16(),
+            arrUInt16.count == 3 {
+            presetID = arrUInt16[1]
             //
             parseData(data)
         } else {
@@ -239,9 +296,11 @@ struct ResponseReadCAN: CommandResponse {
     
     init(from data: Data) throws {
         let val = [UInt8](data)
-        if val.count == 8 {
-            idCAN = val.subArray(fromIndex: 2, toIndex: 4).convertToInt16()
-            idVersion = val.subArray(fromIndex: 4, toIndex: 6).convertToInt16()
+        if let arrUInt16 = val.convertToArrUInt16(),
+            arrUInt16.count == 4 {
+            //
+            idCAN = arrUInt16[1]
+            idVersion = arrUInt16[2]
             //
             parseData(data)
         } else {
@@ -262,10 +321,12 @@ struct ResponsePoyling: CommandResponse {
     
     init(from data: Data) throws {
         let val = [UInt8](data)
-        if val.count == 8 {
-            let byte2 = val.subArray(fromIndex: 2, toIndex: 4).convertToInt16()
+        if let arrUInt16 = val.convertToArrUInt16(),
+            arrUInt16.count == 4 {
+            //
+            let byte2 = arrUInt16[1]
             state = PeripheralState(rawValue: byte2)
-            percent = val.subArray(fromIndex: 4, toIndex: 6).convertToInt16()
+            percent = arrUInt16[2]
             //
             parseData(data)
         } else {

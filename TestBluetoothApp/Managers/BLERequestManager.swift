@@ -75,6 +75,18 @@ class BLERequestManager {
         }, failure: failure)
     }
     
+    func writePresets(presetID: UInt16, presetsArr: [PresetModel], success: @escaping ((ResponseWritePresets) -> Void), failure: @escaping BLERequest.Failure) {
+        
+        peripheralManager.run(command: WritePresets(currentPresetID: presetID, presetsArr: presetsArr), success: { (commandResponse) in
+            guard let resp = commandResponse as? ResponseWritePresets else {
+                failure(RequestError.unexpectedResponse)
+                return
+            }
+            
+            success(resp)
+        }, failure: failure)
+    }
+    
     func readIDSounds(completion: @escaping ((ResponseReadIDSounds) -> Void), failure: @escaping BLERequest.Failure) {
         
         peripheralManager.run(command: ReadIDSounds(), success: { (commandResponse) in
