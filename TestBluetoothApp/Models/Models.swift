@@ -13,3 +13,9 @@ struct PresetModel {
     var modeID: UInt16
     var activity: UInt16
 }
+
+struct SoundPackageModel {
+    var id: UInt16
+    var versionID: UInt16
+    var modes: UInt16
+}

@@ -157,8 +157,30 @@ struct ReadIDSounds: CommandProtocol {
 }
 
 struct ResponseReadIDSounds: CommandResponse {
-    init(from data: Data) {
-        parseData(data)
+    var packageCount: Int
+    var soundPackages: [SoundPackageModel]
+    
+    init(from data: Data) throws {
+        let val = [UInt8](data)
+        if let arrUInt16 = val.convertToArrUInt16(),
+            arrUInt16.count >= 5 {
+            packageCount = Int(arrUInt16[1])
+            soundPackages = []
+            
+            // array of all presets info (1 preset == 3 elements of array)
+            var packageArr = arrUInt16.subArray(fromIndex: 3, toIndex: arrUInt16.count-1)
+            
+            if packageArr.count % 3 == 0 {
+                while packageArr.count != 0 {
+                    soundPackages.append(SoundPackageModel(id: packageArr[0], versionID: packageArr[1], modes: packageArr[2]))
+                    packageArr.removeFirst(3)
+                }
+            }
+            //
+            parseData(data)
+        } else {
+            throw RequestError.parsingError
+        }
     }
 }
 

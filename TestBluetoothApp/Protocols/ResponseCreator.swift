@@ -40,7 +40,7 @@ extension ResponseCreator {
         case CommandsU16.selectPreset.secondByte:
             return try ResponseSelectCurrentPreset(from: data)
         case CommandsU16.readIDSounds.secondByte:
-            return ResponseReadIDSounds(from: data)
+            return try ResponseReadIDSounds(from: data)
         case CommandsU16.muteON.secondByte:
             return ResponseMuteOn(from: data)
         case CommandsU16.muteOFF.secondByte:
