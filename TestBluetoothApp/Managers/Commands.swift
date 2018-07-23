@@ -79,7 +79,7 @@ struct ResponseReadParameters: CommandResponse {
             //
             parseData(data)
         } else {
-            throw RequestError.dataNotComplete
+            throw RequestError.parsingError
         }
     }
 }
@@ -120,16 +120,18 @@ struct StartPlaySound: CommandProtocol {
 }
 
 struct ResponseStartPlaySound: CommandResponse {
-    var soundID = UInt16.min
-    var versionOfPackageID = UInt16.min
+    var soundID: UInt16
+    var versionOfPackageID: UInt16
     
-    init(from data: Data) {
+    init(from data: Data) throws {
         let val = [UInt8](data)
         if val.count == 8 {
             soundID = val.subArray(fromIndex: 2, toIndex: 4).convertToInt16()
             versionOfPackageID = val.subArray(fromIndex: 4, toIndex: 6).convertToInt16()
             //
             parseData(data)
+        } else {
+            throw RequestError.parsingError
         }
     }
 }
@@ -185,14 +187,16 @@ struct SelectCurrentPreset: CommandProtocol {
 }
 
 struct ResponseSelectCurrentPreset: CommandResponse {
-    var presetID = UInt16.min
+    var presetID: UInt16
     
-    init(from data: Data) {
+    init(from data: Data) throws {
         let val = [UInt8](data)
         if val.count == 6 {
             presetID = val.subArray(fromIndex: 2, toIndex: 4).convertToInt16()
             //
             parseData(data)
+        } else {
+            throw RequestError.parsingError
         }
     }
 }
@@ -233,13 +237,15 @@ struct ResponseReadCAN: CommandResponse {
     var idCAN = UInt16.min
     var idVersion = UInt16.min
     
-    init(from data: Data) {
+    init(from data: Data) throws {
         let val = [UInt8](data)
         if val.count == 8 {
             idCAN = val.subArray(fromIndex: 2, toIndex: 4).convertToInt16()
             idVersion = val.subArray(fromIndex: 4, toIndex: 6).convertToInt16()
             //
             parseData(data)
+        } else {
+            throw RequestError.parsingError
         }
     }
 }
@@ -251,10 +257,10 @@ struct Poyling: CommandProtocol {
 }
 
 struct ResponsePoyling: CommandResponse {
-    var state = PeripheralState.busy
-    var percent = UInt16.min
+    var state: PeripheralState
+    var percent: UInt16
     
-    init(from data: Data) {
+    init(from data: Data) throws {
         let val = [UInt8](data)
         if val.count == 8 {
             let byte2 = val.subArray(fromIndex: 2, toIndex: 4).convertToInt16()
@@ -262,6 +268,8 @@ struct ResponsePoyling: CommandResponse {
             percent = val.subArray(fromIndex: 4, toIndex: 6).convertToInt16()
             //
             parseData(data)
+        } else {
+            throw RequestError.parsingError
         }
     }
 }

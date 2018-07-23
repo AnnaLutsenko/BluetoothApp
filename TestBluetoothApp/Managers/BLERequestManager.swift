@@ -106,7 +106,6 @@ class BLERequestManager {
         
         peripheralManager.run(command: ReadCAN(), success: { (commandResponse) in
             guard let resp = commandResponse as? ResponseReadCAN else {
-                // TODO: Throw error or failure()
                 failure(RequestError.unexpectedResponse)
                 return
             }
