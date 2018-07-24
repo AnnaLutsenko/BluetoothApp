@@ -30,8 +30,8 @@ enum PeripheralError: UInt16, Error {
     
     case firmwareNotInstalled       = 0x8051 // 3
     case soundNotWriting            = 0x8040 // 4.1
-    case rulesOfSoundNotWriting     = 0x0042 // 4.3
-    case rulesOfSampleNotWriting    = 0x8043 // 4.4
+    case rulesOfSampleNotWriting    = 0x8042 // 4.3
+    case rulesOfSoundNotWriting     = 0x8043 // 4.4
     case deviceIsNotReady           = 0x8044 // 4.5
     
     case audioIsNotInstalled        = 0x8046 // 5

@@ -186,6 +186,20 @@ class PeripheralConnectedViewController: UIViewController, StoryboardInstance {
         })
     }
     
+    @IBAction func writeRulesOfSample(_ sender: UIButton) {
+        //
+        let sound = SoundModel(id: UInt16(0), versionID: UInt16(0))
+        let sample = SampleModel(sound: sound, id: UInt16(3))
+        let rules = [RuleModel(id: UInt16(0x0007), means: UInt16(50))]
+        //
+        peripheralManager?.bleRequestManager.writeRulesOfSample(sample: sample, rules: rules, success: { (resp) in
+            debugPrint("---- Successful writeRulesOf Sample ----")
+            debugPrint(resp)
+        }, failure: { (error) in
+            debugPrint(error.localizedDescription)
+        })
+    }
+    
     @IBAction func writeRulesOfSoundPackageMode(_ sender: UIButton) {
         //
         let sound = SoundModel(id: UInt16(0), versionID: UInt16(0))

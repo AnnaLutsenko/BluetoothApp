@@ -85,8 +85,51 @@ struct ResponseReadParameters: CommandResponse {
     }
 }
 
-//MARK: - 4.4 (or 7)
-/// 4.4 - Запись правил режимов звукового пакета в устройство
+//MARK: - 4
+
+/// 4.3 - Запись правил семпла звукового пакета в устройство
+struct WriteRulesOfSample: CommandProtocol {
+    var u16Command: CommandsU16 = .writeRulesOfSample
+    var data: Data
+    
+    init(sample: SampleModel, rules: [RuleModel]) {
+        var commandArr = u16Command.arrU8
+        //
+        commandArr.append(sample.sound.id.convertToUInt8())
+        commandArr.append(sample.sound.versionID.convertToUInt8())
+        commandArr.append(sample.id.convertToUInt8())
+        commandArr.append(rules.count.convertToUInt8())
+        //
+        for rule in rules {
+            commandArr.append(rule.id.convertToUInt8())
+            commandArr.append(rule.means.convertToUInt8())
+        }
+        //
+        data = commandArr.toDataWithCRC()
+    }
+}
+
+struct ResponseWriteRulesOfSample: CommandResponse {
+    var sample: SampleModel
+    var rulesCount: Int
+    
+    init(from data: Data) throws {
+        let val = [UInt8](data)
+        if let arrUInt16 = val.convertToArrUInt16(),
+            arrUInt16.count == 6 {
+            //
+            let sound = SoundModel(id: arrUInt16[1], versionID: arrUInt16[2])
+            sample = SampleModel(sound: sound, id: arrUInt16[3])
+            rulesCount = Int(arrUInt16[4])
+            //
+            parseData(data)
+        } else {
+            throw RequestError.parsingError
+        }
+    }
+}
+
+/// 4.4 (or 7) - Запись правил режимов звукового пакета в устройство
 struct WriteRulesOfSoundPackageMode: CommandProtocol {
     var u16Command: CommandsU16 = .writeRulesOfSoundPackageMode
     var data: Data
@@ -127,7 +170,6 @@ struct ResponseWriteRulesOfSoundPackageMode: CommandResponse {
         }
     }
 }
-
 
 //MARK: - 5
 /// 5 - Удаление звукового пакета из устройства
@@ -269,7 +311,7 @@ struct ResponseReadPresets: CommandResponse {
     }
 }
 
-//MARK: - 10
+//MARK: - 10 
 /// 10 - Запись Пресетoв
 struct WritePresets: CommandProtocol {
     var u16Command: CommandsU16 = .writePresets

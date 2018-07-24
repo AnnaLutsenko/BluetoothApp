@@ -138,6 +138,18 @@ class BLERequestManager {
         }, failure: failure)
     }
     
+    func writeRulesOfSample(sample: SampleModel, rules: [RuleModel], success: @escaping ((ResponseWriteRulesOfSample) -> Void), failure: @escaping BLERequest.Failure) {
+        
+        peripheralManager.run(command: WriteRulesOfSample(sample: sample, rules: rules), success: { (commandResponse) in
+            guard let resp = commandResponse as? ResponseWriteRulesOfSample else {
+                failure(RequestError.unexpectedResponse)
+                return
+            }
+            
+            success(resp)
+        }, failure: failure)
+    }
+    
     func writeRulesOfSoundPackageMode(soundPackage: SoundPackageModel, rules: [RuleModel], success: @escaping ((ResponseWriteRulesOfSoundPackageMode) -> Void), failure: @escaping BLERequest.Failure) {
         
         peripheralManager.run(command: WriteRulesOfSoundPackageMode(soundPackage: soundPackage, rules: rules), success: { (commandResponse) in
