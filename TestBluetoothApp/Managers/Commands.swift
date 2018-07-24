@@ -36,7 +36,7 @@ enum CommandsU16: UInt16 {
     case muteOFF        = 0x0049        // 13
     //
     case readCAN        = 0x004A        // 14
-    case writeToCAN     = 0x004B        // 15
+    case writeCAN       = 0x004B        // 15
     //
     case poyling        = 0x0008        // 16
     
@@ -193,7 +193,7 @@ struct ReadPresets: CommandProtocol {
 struct ResponseReadPresets: CommandResponse {
     var presetID: UInt16
     var presetCount: Int
-    var presets: [PresetModel]
+    var presets: [PresetModel] = []
     
     init(from data: Data) throws {
         let val = [UInt8](data)
@@ -201,7 +201,6 @@ struct ResponseReadPresets: CommandResponse {
             arrUInt16.count >= 7 {
             presetID = arrUInt16[1]
             presetCount = Int(arrUInt16[2])
-            presets = []
             
             // array of all presets info (1 preset == 3 elements of array)
             var arrayOfPresets = arrUInt16.subArray(fromIndex: 3, toIndex: arrUInt16.count-1)
@@ -229,14 +228,12 @@ struct WritePresets: CommandProtocol {
         var commandArr = u16Command.arrU8
         //
         commandArr.append(currentPresetID.convertToUInt8())
-        commandArr.append(UInt16(presetsArr.count).convertToUInt8())
+        commandArr.append(presetsArr.count.convertToUInt8())
+        //
         for preset in presetsArr {
-            
             commandArr.append(preset.soundPackageID.convertToUInt8())
             commandArr.append(preset.modeID.convertToUInt8())
             commandArr.append(preset.activity.convertToUInt8())
-
-
         }
         //
         data = commandArr.toDataWithCRC()
@@ -313,16 +310,54 @@ struct ReadCAN: CommandProtocol {
 }
 
 struct ResponseReadCAN: CommandResponse {
-    var idCAN = UInt16.min
-    var idVersion = UInt16.min
+    var can: CAN_Model
     
     init(from data: Data) throws {
         let val = [UInt8](data)
         if let arrUInt16 = val.convertToArrUInt16(),
             arrUInt16.count == 4 {
             //
-            idCAN = arrUInt16[1]
-            idVersion = arrUInt16[2]
+            can = CAN_Model(id: arrUInt16[1], versionID: arrUInt16[2])
+            parseData(data)
+        } else {
+            throw RequestError.parsingError
+        }
+    }
+}
+
+/// 15 - Writing parameters of CAN to peripheral
+struct WriteCAN: CommandProtocol {
+    var u16Command: CommandsU16 = .writeCAN
+    var data: Data
+    
+    init(CAN: CAN_Model, paramID: UInt16, rules: [RuleModel]) {
+        var commandArr = u16Command.arrU8
+        //
+        commandArr.append(CAN.id.convertToUInt8())
+        commandArr.append(CAN.versionID.convertToUInt8())
+        commandArr.append(paramID.convertToUInt8())
+        commandArr.append(rules.count.convertToUInt8())
+        //
+        for rule in rules {
+            commandArr.append(rule.id.convertToUInt8())
+            commandArr.append(rule.means.convertToUInt8())
+        }
+        //
+        data = commandArr.toDataWithCRC()
+    }
+}
+
+struct ResponseWriteCAN: CommandResponse {
+    var can: CAN_Model
+    var rulesCount: Int
+    
+    init(from data: Data) throws {
+        let val = [UInt8](data)
+        if let arrUInt16 = val.convertToArrUInt16(),
+            arrUInt16.count == 5 {
+            //
+            can = CAN_Model(id: arrUInt16[1], versionID: arrUInt16[2])
+            rulesCount = Int(arrUInt16[3])
             //
             parseData(data)
         } else {

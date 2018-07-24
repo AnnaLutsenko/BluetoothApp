@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		9514FFF521048D870037C525 /* Array<UInt8>+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9514FFF421048D870037C525 /* Array<UInt8>+Ext.swift */; };
+		9514FFF521048D870037C525 /* Array+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9514FFF421048D870037C525 /* Array+Ext.swift */; };
 		9514FFF721048DB20037C525 /* Data+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9514FFF621048DB20037C525 /* Data+Ext.swift */; };
 		9516DA542103526D00862B17 /* BLERequestManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9516DA532103526D00862B17 /* BLERequestManager.swift */; };
 		9516DA562103530D00862B17 /* BLERequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9516DA552103530D00862B17 /* BLERequest.swift */; };
@@ -33,7 +33,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		9514FFF421048D870037C525 /* Array<UInt8>+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array<UInt8>+Ext.swift"; sourceTree = "<group>"; };
+		9514FFF421048D870037C525 /* Array+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Ext.swift"; sourceTree = "<group>"; };
 		9514FFF621048DB20037C525 /* Data+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+Ext.swift"; sourceTree = "<group>"; };
 		9516DA532103526D00862B17 /* BLERequestManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLERequestManager.swift; sourceTree = "<group>"; };
 		9516DA552103530D00862B17 /* BLERequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLERequest.swift; sourceTree = "<group>"; };
@@ -120,7 +120,7 @@
 				951F2CBF20D950B400222247 /* UIAlertController+Ext.swift */,
 				95A6567C20E0CB4B0041BFAF /* UInt16+Ext.swift */,
 				9514FFF621048DB20037C525 /* Data+Ext.swift */,
-				9514FFF421048D870037C525 /* Array<UInt8>+Ext.swift */,
+				9514FFF421048D870037C525 /* Array+Ext.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -243,7 +243,7 @@
 				951F2CBC20D935FC00222247 /* UIColor+Ext.swift in Sources */,
 				95B75D2E20F7919A00F7473D /* ErrorHandler.swift in Sources */,
 				951F2CBA20D9356500222247 /* ScanButton.swift in Sources */,
-				9514FFF521048D870037C525 /* Array<UInt8>+Ext.swift in Sources */,
+				9514FFF521048D870037C525 /* Array+Ext.swift in Sources */,
 				9514FFF721048DB20037C525 /* Data+Ext.swift in Sources */,
 				9516DA582103535800862B17 /* ResponseCreator.swift in Sources */,
 				95A6567D20E0CB4B0041BFAF /* UInt16+Ext.swift in Sources */,

@@ -126,6 +126,18 @@ class BLERequestManager {
         }, failure: failure)
     }
     
+    func writeCAN(_ can: CAN_Model, paramID: UInt16, rules: [RuleModel], success: @escaping ((ResponseWriteCAN) -> Void), failure: @escaping BLERequest.Failure) {
+        
+        peripheralManager.run(command: WriteCAN(CAN: can, paramID: paramID, rules: rules), success: { (commandResponse) in
+            guard let resp = commandResponse as? ResponseWriteCAN else {
+                failure(RequestError.unexpectedResponse)
+                return
+            }
+            
+            success(resp)
+        }, failure: failure)
+    }
+    
     func muteON(success: @escaping ((ResponseMuteOn)-> Void), failure: @escaping BLERequest.Failure) {
         
         peripheralManager.run(command: MuteOn(), success: { (commandResponse) in

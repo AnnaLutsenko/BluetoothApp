@@ -19,3 +19,13 @@ struct SoundPackageModel {
     var versionID: UInt16
     var modes: UInt16
 }
+
+struct CAN_Model {
+    var id: UInt16
+    var versionID: UInt16
+}
+
+struct RuleModel {
+    var id: UInt16
+    var means: UInt16
+}

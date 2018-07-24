@@ -8,6 +8,7 @@
 
 import UIKit
 
+//MARK: - UInt16 array
 extension Array where Element == UInt16 {
     
     func convertToUInt8() -> [UInt8] {
@@ -23,6 +24,7 @@ extension Array where Element == UInt16 {
     }
 }
 
+//MARK: - UInt8 array
 extension Array where Element == UInt8 {
     
     func toDataWithCRC() -> Data {

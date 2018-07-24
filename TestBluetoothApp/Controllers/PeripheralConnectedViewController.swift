@@ -172,6 +172,19 @@ class PeripheralConnectedViewController: UIViewController, StoryboardInstance {
         })
     }
     
+    @IBAction func writeCAN(_ sender: UIButton) {
+        let can = CAN_Model(id: UInt16(0), versionID: UInt16(0))
+        let param: UInt16 = 0x0000
+        let rules = [RuleModel(id: UInt16(0x0003), means: UInt16(1))]
+        //
+        peripheralManager?.bleRequestManager.writeCAN(can, paramID: param, rules: rules, success: { (resp) in
+            debugPrint("---- Successful Write CAN ----")
+            debugPrint(resp)
+        }, failure: { (error) in
+            debugPrint(error.localizedDescription)
+        })
+    }
+    
     @IBAction func poyling(_ sender: UIButton) {
         peripheralManager?.bleRequestManager.poyling(success: { (resp) in
             debugPrint("---- Successful Poyling ----")

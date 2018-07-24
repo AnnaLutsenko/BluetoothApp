@@ -19,3 +19,13 @@ extension UInt16 {
         return [UInt8Value1, UInt8Value2]
     }
 }
+
+extension Int {
+    
+    func convertToUInt8() -> [UInt8] {
+        let nv = Int16(self)
+        let uNv = UInt16(bitPattern: nv)
+        return [UInt8(uNv >> 8), UInt8(uNv & 0x00ff)]
+//        return UInt16(self).convertToUInt8()
+    }
+}

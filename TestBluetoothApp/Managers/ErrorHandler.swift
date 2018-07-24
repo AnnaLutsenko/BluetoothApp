@@ -46,7 +46,7 @@ enum PeripheralError: UInt16, Error {
     case notInMute                  = 0x8049 // 13
     
     case readOfCANFailed            = 0x804A // 14
-    case parametersNotSetToCAN      = 0x804B // 15
+    case deviceCanNotSetParameters  = 0x804B // 15
     
     static func error(with code: UInt16) -> Error {
         return PeripheralError(rawValue: code) ?? RequestError.unexpectedResponse
@@ -84,7 +84,7 @@ enum PeripheralError: UInt16, Error {
             return "The device can not execute a command (not in MUTE)"
         case .readOfCANFailed:
             return "The CAN configuration on the device failed"
-        case .parametersNotSetToCAN:
+        case .deviceCanNotSetParameters:
             return "The device can not set CAN parameters"
         }
     }

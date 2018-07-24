@@ -47,6 +47,8 @@ extension ResponseCreator {
             return ResponseMuteOff(from: data)
         case CommandsU16.readCAN.secondByte:
             return try ResponseReadCAN(from: data)
+        case CommandsU16.writeCAN.secondByte:
+            return try ResponseWriteCAN(from: data)
         case CommandsU16.poyling.secondByte:
             return try ResponsePoyling(from: data)
         default:
