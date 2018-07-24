@@ -14,10 +14,19 @@ struct PresetModel {
     var activity: UInt16
 }
 
-struct SoundPackageModel {
+struct SoundModel {
     var id: UInt16
     var versionID: UInt16
-    var modes: UInt16
+}
+
+struct SoundPackageModel {
+    var sound: SoundModel
+    var modeID: UInt16
+}
+
+struct SampleModel {
+    var sound: SoundModel
+    var id: UInt16
 }
 
 struct CAN_Model {

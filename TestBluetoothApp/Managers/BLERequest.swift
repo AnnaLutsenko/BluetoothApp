@@ -43,7 +43,7 @@ class BLERequest {
         //
         let modbusStr = String(format:"%04X", modbusValue)
         debugPrint("MODBUS = \(modbusStr)")
-        debugPrint("CRC16 = \(hexValCRC16)")
+        debugPrint("CRC16  = \(hexValCRC16)")
         //
         return hexValCRC16 == modbusStr
     }

@@ -86,8 +86,9 @@ class PeripheralConnectedViewController: UIViewController, StoryboardInstance {
     
     
     @IBAction func startPlaySound() {
-        
-        peripheralManager?.bleRequestManager.startPlaySound(id: [UInt16(8), UInt16(44)], success: { (resp) in
+        let sound = SoundModel(id: UInt16(8), versionID: UInt16(44))
+        //
+        peripheralManager?.bleRequestManager.startPlaySound(sound: sound, success: { (resp) in
             debugPrint("---- Success start playing sound ----")
             debugPrint(resp)
         }, failure: { (error) in
@@ -185,6 +186,20 @@ class PeripheralConnectedViewController: UIViewController, StoryboardInstance {
         })
     }
     
+    @IBAction func writeRulesOfSoundPackageMode(_ sender: UIButton) {
+        //
+        let sound = SoundModel(id: UInt16(0), versionID: UInt16(0))
+        let soundPack = SoundPackageModel(sound: sound, modeID: UInt16(3))
+        let rules = [RuleModel(id: UInt16(0x0000), means: UInt16(50))]
+        //
+        peripheralManager?.bleRequestManager.writeRulesOfSoundPackageMode(soundPackage: soundPack, rules: rules, success: { (resp) in
+            debugPrint("---- Successful writeRulesOfSoundPackageMode ----")
+            debugPrint(resp)
+        }, failure: { (error) in
+            debugPrint(error.localizedDescription)
+        })
+    }
+    
     @IBAction func poyling(_ sender: UIButton) {
         peripheralManager?.bleRequestManager.poyling(success: { (resp) in
             debugPrint("---- Successful Poyling ----")
@@ -198,7 +213,7 @@ class PeripheralConnectedViewController: UIViewController, StoryboardInstance {
 
 /*
 extension PeripheralConnectedViewController: CBPeripheralDelegate {
-    
+ 
     func peripheral(_ peripheral: CBPeripheral, didReadRSSI RSSI: NSNumber, error: Error?) {
         switch RSSI.intValue {
         case -90 ... -60:
@@ -210,7 +225,7 @@ extension PeripheralConnectedViewController: CBPeripheralDelegate {
         default:
             rssiLbl.textColor = .btGreen
         }
-        
+ 
         rssiLbl.text = "\(RSSI) dB"
     }
 }

@@ -39,9 +39,9 @@ class BLERequestManager {
         }, failure: failure)
     }
     
-    func startPlaySound(id: [UInt16], success: @escaping ((ResponseStartPlaySound) -> Void), failure: @escaping BLERequest.Failure) {
+    func startPlaySound(sound: SoundModel, success: @escaping ((ResponseStartPlaySound) -> Void), failure: @escaping BLERequest.Failure) {
         
-        peripheralManager.run(command: StartPlaySound(soundID: id), success: { (commandResponse) in
+        peripheralManager.run(command: StartPlaySound(sound: sound), success: { (commandResponse) in
             guard let resp = commandResponse as? ResponseStartPlaySound else {
                 failure(RequestError.unexpectedResponse)
                 return
@@ -130,6 +130,18 @@ class BLERequestManager {
         
         peripheralManager.run(command: WriteCAN(CAN: can, paramID: paramID, rules: rules), success: { (commandResponse) in
             guard let resp = commandResponse as? ResponseWriteCAN else {
+                failure(RequestError.unexpectedResponse)
+                return
+            }
+            
+            success(resp)
+        }, failure: failure)
+    }
+    
+    func writeRulesOfSoundPackageMode(soundPackage: SoundPackageModel, rules: [RuleModel], success: @escaping ((ResponseWriteRulesOfSoundPackageMode) -> Void), failure: @escaping BLERequest.Failure) {
+        
+        peripheralManager.run(command: WriteRulesOfSoundPackageMode(soundPackage: soundPackage, rules: rules), success: { (commandResponse) in
+            guard let resp = commandResponse as? ResponseWriteRulesOfSoundPackageMode else {
                 failure(RequestError.unexpectedResponse)
                 return
             }

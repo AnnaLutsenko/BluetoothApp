@@ -17,9 +17,9 @@ enum CommandsU16: UInt16 {
     //
     case writeUpdateSound   = 0x0040   // 4.1
     case writeSample        = 0x0041   // 4.2
-    case writeRulesSound    = 0x0042   // 4.3
-    case writeSettingsSound = 0x0043   // 4.4 & 7
-    case confirmRecordSound = 0x0044   // 4.5 Confirming the recording / updating of the sound package in the device //TODO: command
+    case writeRulesOfSample = 0x0042   // 4.3
+    case writeRulesOfSoundPackageMode = 0x0043   // 4.4 & 7
+    case confirmRecordSound           = 0x0044   // 4.5 Confirming the recording / updating of the sound package in the device
     //
     case startPlaySample    = 0x0020   // 6
     case stopListenSample   = 0x0021   // 6
@@ -51,7 +51,7 @@ enum CommandsU16: UInt16 {
     }
 }
 
-
+//MARK: - 2
 /// 2 - Чтение параметров устройства
 struct ReadParameters: CommandProtocol {
     var u16Command: CommandsU16 = .readParameters
@@ -85,6 +85,51 @@ struct ResponseReadParameters: CommandResponse {
     }
 }
 
+//MARK: - 4.4 (or 7)
+/// 4.4 - Запись правил режимов звукового пакета в устройство
+struct WriteRulesOfSoundPackageMode: CommandProtocol {
+    var u16Command: CommandsU16 = .writeRulesOfSoundPackageMode
+    var data: Data
+    
+    init(soundPackage: SoundPackageModel, rules: [RuleModel]) {
+        var commandArr = u16Command.arrU8
+        //
+        commandArr.append(soundPackage.sound.id.convertToUInt8())
+        commandArr.append(soundPackage.sound.versionID.convertToUInt8())
+        commandArr.append(soundPackage.modeID.convertToUInt8())
+        commandArr.append(rules.count.convertToUInt8())
+        //
+        for rule in rules {
+            commandArr.append(rule.id.convertToUInt8())
+            commandArr.append(rule.means.convertToUInt8())
+        }
+        //
+        data = commandArr.toDataWithCRC()
+    }
+}
+
+struct ResponseWriteRulesOfSoundPackageMode: CommandResponse {
+    var soundPackage: SoundPackageModel
+    var rulesCount: Int
+    
+    init(from data: Data) throws {
+        let val = [UInt8](data)
+        if let arrUInt16 = val.convertToArrUInt16(),
+            arrUInt16.count == 6 {
+            //
+            let sound = SoundModel(id: arrUInt16[1], versionID: arrUInt16[2])
+            soundPackage = SoundPackageModel(sound: sound, modeID: arrUInt16[3])
+            rulesCount = Int(arrUInt16[4])
+            //
+            parseData(data)
+        } else {
+            throw RequestError.parsingError
+        }
+    }
+}
+
+
+//MARK: - 5
 /// 5 - Удаление звукового пакета из устройства
 struct DeleteSound: CommandProtocol {
     var u16Command: CommandsU16 = .deleteSound
@@ -106,15 +151,18 @@ struct ResponseDeleteSound: CommandResponse {
     }
 }
 
+//MARK: - 6
 /// 6 - Прослушивание тестового сэмпла звукового пакета на устройстве
 struct StartPlaySound: CommandProtocol {
     var u16Command: CommandsU16 = .startPlaySample
     var data: Data
     
-    init(soundID: [UInt16]) {
+    init(sound: SoundModel) {
         var commandArr = u16Command.arrU8
-        let u8ID = soundID.convertToUInt8()
-        commandArr.append(u8ID)
+        //
+        commandArr.append(sound.id.convertToUInt8())
+        commandArr.append(sound.id.convertToUInt8())
+        //
         data = commandArr.toDataWithCRC()
         print("Start Play sound: \(data.convertToHEX()))")
     }
@@ -150,6 +198,7 @@ struct ResponseStopListenSample: CommandResponse {
     }
 }
 
+//MARK: - 8
 /// 8 - Чтение ID установленных звуковых пакетов
 struct ReadIDSounds: CommandProtocol {
     var u16Command: CommandsU16 = .readIDSounds
@@ -172,7 +221,7 @@ struct ResponseReadIDSounds: CommandResponse {
             
             if packageArr.count % 3 == 0 {
                 while packageArr.count != 0 {
-                    soundPackages.append(SoundPackageModel(id: packageArr[0], versionID: packageArr[1], modes: packageArr[2]))
+                    soundPackages.append(SoundPackageModel(sound: SoundModel(id: packageArr[0], versionID:  packageArr[1]), modeID: packageArr[2]))
                     packageArr.removeFirst(3)
                 }
             }
@@ -184,6 +233,7 @@ struct ResponseReadIDSounds: CommandResponse {
     }
 }
 
+//MARK: - 9
 /// 9 - Чтение пресетов
 struct ReadPresets: CommandProtocol {
     var u16Command: CommandsU16 = .readPresets
@@ -219,6 +269,7 @@ struct ResponseReadPresets: CommandResponse {
     }
 }
 
+//MARK: - 10
 /// 10 - Запись Пресетoв
 struct WritePresets: CommandProtocol {
     var u16Command: CommandsU16 = .writePresets
@@ -247,6 +298,7 @@ struct ResponseWritePresets: CommandResponse {
     }
 }
 
+//MARK: - 11
 /// 11 - Выбор текущего Пресета в устройстве
 struct SelectCurrentPreset: CommandProtocol {
     var u16Command: CommandsU16 = .selectPreset
@@ -277,6 +329,7 @@ struct ResponseSelectCurrentPreset: CommandResponse {
     }
 }
 
+//MARK: - 12
 /// 12 - Mute ON
 struct MuteOn: CommandProtocol {
     var u16Command: CommandsU16 = .muteON
@@ -290,6 +343,7 @@ struct ResponseMuteOn: CommandResponse {
     }
 }
 
+//MARK: - 13
 /// 13 - Mute OFF
 struct MuteOff: CommandProtocol {
     var u16Command: CommandsU16 = .muteOFF
@@ -303,6 +357,7 @@ struct ResponseMuteOff: CommandResponse {
     }
 }
 
+//MARK: - 14
 /// 14 - Reading ID and version parameters of CAN from peripheral
 struct ReadCAN: CommandProtocol {
     var u16Command: CommandsU16 = .readCAN
@@ -325,6 +380,7 @@ struct ResponseReadCAN: CommandResponse {
     }
 }
 
+//MARK: - 15
 /// 15 - Writing parameters of CAN to peripheral
 struct WriteCAN: CommandProtocol {
     var u16Command: CommandsU16 = .writeCAN
@@ -366,6 +422,7 @@ struct ResponseWriteCAN: CommandResponse {
     }
 }
 
+//MARK: - 16
 /// 16 - Команда пойлинга
 struct Poyling: CommandProtocol {
     var u16Command: CommandsU16 = .poyling
