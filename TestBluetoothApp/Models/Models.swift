@@ -10,6 +10,10 @@ import Foundation
 
 struct PeripheralModel {
     var serialNumber: UInt16
+    var version: VersionModel
+}
+
+struct VersionModel {
     var firmware: UInt16
     var hardware: UInt16
 }
@@ -43,4 +47,9 @@ struct CAN_Model {
 struct RuleModel {
     var id: UInt16
     var means: UInt16
+}
+
+struct BlockModel {
+    var count: UInt16
+    var currentNumber: UInt16
 }

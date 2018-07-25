@@ -10,6 +10,7 @@ import Foundation
 
 
 enum RequestError: Error {
+    case firmwareNotDownloaded
     case wrongData
     case unexpectedResponse
     case dataNotComplete

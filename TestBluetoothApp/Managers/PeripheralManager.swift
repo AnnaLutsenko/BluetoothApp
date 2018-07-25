@@ -9,6 +9,11 @@
 import Foundation
 import CoreBluetooth
 
+enum DeviceType: UInt16 {
+    case main = 0x0001
+    case BLE  = 0x0002
+}
+
 enum PeripheralState: UInt16 {
     case free = 0x0000
     case busy = 0x0001
@@ -29,13 +34,11 @@ class PeripheralManager: NSObject {
     
     let peripheral: CBPeripheral
     //
-    /// Manager for updating firmware on peripheral
-    let firmwareManager = FirmwareManager()
+    private (set) var bleRequestManager: BLERequestManager!
     //
     private var arrayReadWriteChar: [CBCharacteristic] = []
     private var bleRequests: [BLERequest] = []
     
-    private (set) var bleRequestManager: BLERequestManager!
     
     init(with peripheral: CBPeripheral) {
         self.peripheral = peripheral
@@ -54,12 +57,8 @@ class PeripheralManager: NSObject {
         peripheral.writeValue(command.data, for: arrayReadWriteChar[0], type: .withoutResponse)
     }
     
-    func getNewFirmware() {
-        firmwareManager.getFirmware(success: { _ in
-            print("Successfull getting firmware!")
-        }) { (error) in
-            print(error.localizedDescription)
-        }
+    func updateFW(command: CommandProtocol, success: @escaping ()->Void, failure: @escaping BLERequest.Failure) {
+        peripheral.writeValue(command.data, for: arrayReadWriteChar[0], type: .withoutResponse)
     }
 }
 

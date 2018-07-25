@@ -36,7 +36,7 @@ class PeripheralConnectedViewController: UIViewController, StoryboardInstance {
         peripheralNameLbl.text = peripheral.name
         //        rssiReloadTimer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(refreshRSSI), userInfo: nil, repeats: true)
         //
-        peripheralManager?.getNewFirmware()
+//        peripheralManager?.getNewFirmware()
     }
     
     @objc private func refreshRSSI(){
@@ -47,23 +47,64 @@ class PeripheralConnectedViewController: UIViewController, StoryboardInstance {
         return (peripheral.state == .connected)
     }
     
-    
-    func writeValueToPeripheral(_ val: [UInt8]) {
-        let dataInCRC16 = CRC16.crc16(val, type: .MODBUS)
+    //MARK: Actions
+    @IBAction func downloadFirmware(_ sender: UIButton) {
         
-        if dataInCRC16 != nil {
-            let modbusStr = String(format: "0x%4X", dataInCRC16!)
-            print("MODBUS = " + modbusStr)
-        }
-        guard let crc16InUInt8 = dataInCRC16?.convertToUInt8() else {return}
-        //
-        let dataToSend = val + [crc16InUInt8[0], crc16InUInt8[1]]
-        let nsData = NSData(bytes: dataToSend, length: dataToSend.count) as Data
-        //
-        peripheral.writeValue(nsData,  for: arrayReadWriteChar[0], type: .withoutResponse)
+        peripheralManager?.bleRequestManager.getNewFirmware(success: { (data) in
+            debugPrint("New firmware was download: \(data)")
+        }, failure: { (error) in
+            debugPrint(error.localizedDescription)
+        })
     }
     
-    //MARK: Actions
+    @IBAction func updateFirmware(_ sender: UIButton) {
+        
+        guard let data = peripheralManager?.bleRequestManager.firmwareData else {
+            return
+        }
+        let version = VersionModel(firmware: UInt16(1), hardware: UInt16(1))
+        var dataInU8 = [UInt8](data)
+        var arrOfBlock: [[UInt8]] = []
+        
+        while !dataInU8.isEmpty {
+            let n = dataInU8.count >= 256 ? 256 : dataInU8.count
+            //
+            let block = Array(dataInU8.prefix(n))
+            arrOfBlock.append(block)
+            dataInU8.removeFirst(n)
+        }
+        
+        let myDispatchGroup = DispatchGroup()
+        for blockFW in arrOfBlock.enumerated() {
+            myDispatchGroup.enter()
+            let blockSent = BlockModel(count: UInt16(arrOfBlock.count), currentNumber: UInt16(blockFW.offset + 1))
+            print(blockSent)
+            peripheralManager?.bleRequestManager.updateFirmware(version: version, block: blockSent, FW: blockFW.element, success: {
+                print("Sent block \(blockFW.offset)")
+                //
+                myDispatchGroup.leave()
+                
+            }, failure: { (error) in
+                print(error.localizedDescription)
+                myDispatchGroup.leave()
+            })
+        }
+        
+        myDispatchGroup.notify(queue: .main) {
+            debugPrint("Finished all requests.")
+        }
+        
+    }
+    
+    @IBAction func confirmationUpdate(_ sender: UIButton) {
+        peripheralManager?.bleRequestManager.confirmationUpdate(device: .main, version: VersionModel(firmware: UInt16(1), hardware: UInt16(1)), success: { (resp) in
+            debugPrint("---- Success confirmation Update ----")
+            debugPrint(resp)
+        }, failure: { (error) in
+            debugPrint(error.localizedDescription)
+        })
+    }
+    
     @IBAction func readIDSound() {
         
         peripheralManager?.bleRequestManager.readIDSounds(completion: { (resp) in

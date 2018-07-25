@@ -11,8 +11,45 @@ import Foundation
 class BLERequestManager {
     private unowned let peripheralManager: PeripheralManager
     
+    /// Manager for updating firmware on peripheral
+    private let firmwareManager = FirmwareManager()
+    
+    private (set) var peripheralModel: PeripheralModel?
+    private (set) var firmwareData: Data?
+    
     init(peripheralManager: PeripheralManager) {
         self.peripheralManager = peripheralManager
+    }
+    
+    // MARK: - Firmware
+    func getNewFirmware(success: @escaping FirmwareManager.Success, failure: @escaping FirmwareManager.Failure) {
+        
+        firmwareManager.getFirmware(success: { data in
+            print("Successfull getting firmware!")
+            self.firmwareData = data
+            success(data)
+        }, failure: failure)
+    }
+    
+    func updateFirmware(version: VersionModel, block: BlockModel, FW: [UInt8], success: @escaping ()-> Void, failure: @escaping FirmwareManager.Failure) {
+        
+        let command = UpdateFirmware(version: version, block: block, FW: FW)
+        
+        peripheralManager.updateFW(command: command, success: {
+            success()
+        }, failure: failure)
+    }
+    
+    func confirmationUpdate(device: DeviceType, version: VersionModel, success: @escaping ((ResponseConfirmationUpdate) -> Void), failure: @escaping FirmwareManager.Failure) {
+        
+        peripheralManager.run(command: ConfirmationUpdate(device: device, version: version), success: { (commandResponse) in
+            guard let resp = commandResponse as? ResponseConfirmationUpdate else {
+                failure(RequestError.unexpectedResponse)
+                return
+            }
+            
+            success(resp)
+        }, failure: failure)
     }
     
     func selectCurrentPreset(id: UInt16, success: @escaping ((ResponseSelectCurrentPreset) -> Void), failure: @escaping BLERequest.Failure) {
@@ -107,6 +144,7 @@ class BLERequestManager {
                 failure(RequestError.unexpectedResponse)
                 return
             }
+            self.peripheralModel = resp.peripheral
             success(resp)
             
         }) { (error) in

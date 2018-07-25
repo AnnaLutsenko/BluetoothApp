@@ -68,12 +68,55 @@ struct ResponseReadParameters: CommandResponse {
         if let arrUInt16 = val.convertToArrUInt16(),
             arrUInt16.count == 5 {
             //
-            peripheral = PeripheralModel(serialNumber: arrUInt16[1], firmware: arrUInt16[2], hardware: arrUInt16[3])
+            peripheral = PeripheralModel(serialNumber: arrUInt16[1], version: VersionModel(firmware: arrUInt16[2], hardware: arrUInt16[3]))
             //
             parseData(data)
         } else {
             throw RequestError.parsingError
         }
+    }
+}
+
+//MARK: - 3 Update Firmware
+struct UpdateFirmware: CommandProtocol {
+    var u16Command: CommandsU16 = .updateFirmware
+    var data: Data
+    
+    init(device: DeviceType = .main, version: VersionModel, block: BlockModel, FW: [UInt8]) {
+        var commandArr = u16Command.arrU8
+        //
+        commandArr.append(device.rawValue.convertToUInt8())
+        commandArr.append(version.hardware.convertToUInt8())
+        commandArr.append(version.firmware.convertToUInt8())
+        //
+        commandArr.append(block.count.convertToUInt8())
+        commandArr.append(block.currentNumber.convertToUInt8())
+        //
+        commandArr.append(FW.count.convertToUInt8())
+        commandArr.append(FW)
+        //
+        data = commandArr.toDataWithCRC()
+    }
+}
+
+struct ConfirmationUpdate: CommandProtocol {
+    var u16Command: CommandsU16 = .confirmationUpdate
+    var data: Data
+    
+    init(device: DeviceType, version: VersionModel) {
+        var commandArr = u16Command.arrU8
+        //
+        commandArr.append(device.rawValue.convertToUInt8())
+        commandArr.append(version.hardware.convertToUInt8())
+        commandArr.append(version.firmware.convertToUInt8())
+        //
+        data = commandArr.toDataWithCRC()
+    }
+}
+
+struct ResponseConfirmationUpdate: CommandResponse {
+    init(from data: Data) {
+        parseData(data)
     }
 }
 

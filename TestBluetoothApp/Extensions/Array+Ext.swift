@@ -31,7 +31,7 @@ extension Array where Element == UInt8 {
         let dataInCRC16 = CRC16.crc16(self, type: .MODBUS)
         
         if dataInCRC16 != nil {
-            let modbusStr = String(format: "0x%4X", dataInCRC16!)
+            let modbusStr = String(format: "%04X", dataInCRC16!)
             print("MODBUS = " + modbusStr)
         }
         guard let crc16InUInt8 = dataInCRC16?.convertToUInt8() else {return Data()}
