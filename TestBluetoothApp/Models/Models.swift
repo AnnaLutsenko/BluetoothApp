@@ -8,6 +8,12 @@
 
 import Foundation
 
+struct PeripheralModel {
+    var serialNumber: UInt16
+    var firmware: UInt16
+    var hardware: UInt16
+}
+
 struct PresetModel {
     var soundPackageID: UInt16
     var modeID: UInt16

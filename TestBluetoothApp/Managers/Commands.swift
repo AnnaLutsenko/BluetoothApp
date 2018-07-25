@@ -59,9 +59,7 @@ struct ReadParameters: CommandProtocol {
 }
 
 struct ResponseReadParameters: CommandResponse {
-    var serialNumber: UInt16
-    var firmware: UInt16
-    var hardware: UInt16
+    var peripheral: PeripheralModel
     
     init(from data: Data) throws {
         //
@@ -70,13 +68,7 @@ struct ResponseReadParameters: CommandResponse {
         if let arrUInt16 = val.convertToArrUInt16(),
             arrUInt16.count == 5 {
             //
-            serialNumber = arrUInt16[1]
-            firmware = arrUInt16[2]
-            hardware = arrUInt16[3]
-            //
-            print("HEX serial number = \(serialNumber)")
-            print("u16 version FW = \(firmware)")
-            print("u16 version HW = \(hardware)")
+            peripheral = PeripheralModel(serialNumber: arrUInt16[1], firmware: arrUInt16[2], hardware: arrUInt16[3])
             //
             parseData(data)
         } else {
@@ -86,6 +78,42 @@ struct ResponseReadParameters: CommandResponse {
 }
 
 //MARK: - 4
+
+/// 4.1 - Команда запись/обновление звукового пакета
+struct WriteUpdateSound: CommandProtocol {
+    var u16Command: CommandsU16 = .writeUpdateSound
+    var data: Data
+    
+    init(sound: SoundModel, sampleCount: Int, rulesCount: Int, modesCount: Int, rulesModeCount: Int) {
+        var commandArr = u16Command.arrU8
+        //
+        commandArr.append(sound.id.convertToUInt8())
+        commandArr.append(sound.versionID.convertToUInt8())
+        commandArr.append(sampleCount.convertToUInt8())
+        commandArr.append(rulesCount.convertToUInt8())
+        commandArr.append(modesCount.convertToUInt8())
+        commandArr.append(rulesModeCount.convertToUInt8())
+        //
+        data = commandArr.toDataWithCRC()
+    }
+}
+
+struct ResponseWriteUpdateSound: CommandResponse {
+    var sound: SoundModel
+    
+    init(from data: Data) throws {
+        let val = [UInt8](data)
+        if let arrUInt16 = val.convertToArrUInt16(),
+            arrUInt16.count == 4 {
+            //
+            sound = SoundModel(id: arrUInt16[1], versionID: arrUInt16[2])
+            //
+            parseData(data)
+        } else {
+            throw RequestError.parsingError
+        }
+    }
+}
 
 /// 4.3 - Запись правил семпла звукового пакета в устройство
 struct WriteRulesOfSample: CommandProtocol {
