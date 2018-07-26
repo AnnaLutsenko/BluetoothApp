@@ -15,8 +15,8 @@ enum DeviceType: UInt16 {
 }
 
 enum PeripheralState: UInt16 {
-    case free = 0x0000
-    case busy = 0x0001
+    case free  = 0x0000
+    case busy  = 0x0001
     case error = 0x0002
     case unknownError
     
@@ -57,7 +57,9 @@ class PeripheralManager: NSObject {
         peripheral.writeValue(command.data, for: arrayReadWriteChar[0], type: .withoutResponse)
     }
     
-    func updateFW(command: CommandProtocol, success: @escaping ()->Void, failure: @escaping BLERequest.Failure) {
+    func updateFW(command: CommandProtocol, success: @escaping BLERequest.Success, failure: @escaping BLERequest.Failure) {
+        
+        bleRequests.append(BLERequest(command: command, success: success, failure: failure))
         peripheral.writeValue(command.data, for: arrayReadWriteChar[0], type: .withoutResponse)
     }
 }

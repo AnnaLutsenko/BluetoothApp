@@ -36,7 +36,6 @@ class PeripheralConnectedViewController: UIViewController, StoryboardInstance {
         peripheralNameLbl.text = peripheral.name
         //        rssiReloadTimer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(refreshRSSI), userInfo: nil, repeats: true)
         //
-//        peripheralManager?.getNewFirmware()
     }
     
     @objc private func refreshRSSI(){
@@ -45,6 +44,52 @@ class PeripheralConnectedViewController: UIViewController, StoryboardInstance {
     
     func isDeviceConnected() -> Bool {
         return (peripheral.state == .connected)
+    }
+    
+    // MARK: - Update Firmware
+    func confirmUpdate() {
+        peripheralManager?.bleRequestManager.confirmationUpdate(device: .main, version: VersionModel(firmware: UInt16(1), hardware: UInt16(1)), success: { (resp) in
+            debugPrint("---- Success confirmation Update ----")
+            debugPrint(resp)
+        }, failure: { (error) in
+            debugPrint(error.localizedDescription)
+        })
+    }
+    
+    func nextBlock(i: Int) {
+        
+        guard let data = peripheralManager?.bleRequestManager.firmwareData else {
+            return
+        }
+        
+        let version = VersionModel(firmware: UInt16(1), hardware: UInt16(1))
+        var dataInU8 = [UInt8](data)
+        var arrOfBlock: [[UInt8]] = []
+        
+        while !dataInU8.isEmpty {
+            let n = dataInU8.count >= 64 ? 64 : dataInU8.count
+            //
+            let block = Array(dataInU8.prefix(n))
+            arrOfBlock.append(block)
+            dataInU8.removeFirst(n)
+        }
+        
+        if arrOfBlock.count != i {
+            let blockSent = BlockModel(count: UInt16(arrOfBlock.count), currentNumber: UInt16(i+1))
+            sendCommandFW(version: version, block: blockSent, fw: arrOfBlock[i])
+        } else {
+            debugPrint(" ------ Update FW finished! ------")
+            confirmUpdate()
+        }
+    }
+    
+    func sendCommandFW(version: VersionModel, block: BlockModel, fw: [UInt8]) {
+        peripheralManager?.bleRequestManager.updateFirmware(version: version, block: block, FW: fw, success: { resp in
+            print("Sent block \(block)")
+            self.nextBlock(i: Int(block.currentNumber))
+        }, failure: { (error) in
+            print(error.localizedDescription)
+        })
     }
     
     //MARK: Actions
@@ -58,51 +103,11 @@ class PeripheralConnectedViewController: UIViewController, StoryboardInstance {
     }
     
     @IBAction func updateFirmware(_ sender: UIButton) {
-        
-        guard let data = peripheralManager?.bleRequestManager.firmwareData else {
-            return
-        }
-        let version = VersionModel(firmware: UInt16(1), hardware: UInt16(1))
-        var dataInU8 = [UInt8](data)
-        var arrOfBlock: [[UInt8]] = []
-        
-        while !dataInU8.isEmpty {
-            let n = dataInU8.count >= 256 ? 256 : dataInU8.count
-            //
-            let block = Array(dataInU8.prefix(n))
-            arrOfBlock.append(block)
-            dataInU8.removeFirst(n)
-        }
-        
-        let myDispatchGroup = DispatchGroup()
-        for blockFW in arrOfBlock.enumerated() {
-            myDispatchGroup.enter()
-            let blockSent = BlockModel(count: UInt16(arrOfBlock.count), currentNumber: UInt16(blockFW.offset + 1))
-            print(blockSent)
-            peripheralManager?.bleRequestManager.updateFirmware(version: version, block: blockSent, FW: blockFW.element, success: {
-                print("Sent block \(blockFW.offset)")
-                //
-                myDispatchGroup.leave()
-                
-            }, failure: { (error) in
-                print(error.localizedDescription)
-                myDispatchGroup.leave()
-            })
-        }
-        
-        myDispatchGroup.notify(queue: .main) {
-            debugPrint("Finished all requests.")
-        }
-        
+       nextBlock(i: 0)
     }
     
     @IBAction func confirmationUpdate(_ sender: UIButton) {
-        peripheralManager?.bleRequestManager.confirmationUpdate(device: .main, version: VersionModel(firmware: UInt16(1), hardware: UInt16(1)), success: { (resp) in
-            debugPrint("---- Success confirmation Update ----")
-            debugPrint(resp)
-        }, failure: { (error) in
-            debugPrint(error.localizedDescription)
-        })
+        confirmUpdate()
     }
     
     @IBAction func readIDSound() {

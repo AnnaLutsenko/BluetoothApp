@@ -99,6 +99,27 @@ struct UpdateFirmware: CommandProtocol {
     }
 }
 
+struct ResponseUpdateFirmware: CommandResponse {
+    var deviceType: DeviceType
+    var block: BlockModel
+    var version: VersionModel
+    
+    init(from data: Data) throws {
+        let val = [UInt8](data)
+        if let arrUInt16 = val.convertToArrUInt16(),
+            arrUInt16.count == 7 {
+            //
+            deviceType = DeviceType(rawValue: arrUInt16[1]) ?? .main
+            version = VersionModel(firmware: arrUInt16[3], hardware: arrUInt16[2])
+            block = BlockModel(count: arrUInt16[4], currentNumber: arrUInt16[5])
+            //
+            parseData(data)
+        } else {
+            throw RequestError.parsingError
+        }
+    }
+}
+
 struct ConfirmationUpdate: CommandProtocol {
     var u16Command: CommandsU16 = .confirmationUpdate
     var data: Data

@@ -21,6 +21,6 @@ protocol CommandProtocol {
 extension CommandResponse {
     
     func parseData(_ data: Data) {
-        print("\(self) in HEX: \(data.convertToHEX())")
+//        print("\(self) in HEX: \(data.convertToHEX())")
     }
 }

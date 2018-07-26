@@ -31,12 +31,12 @@ class BLERequestManager {
         }, failure: failure)
     }
     
-    func updateFirmware(version: VersionModel, block: BlockModel, FW: [UInt8], success: @escaping ()-> Void, failure: @escaping FirmwareManager.Failure) {
+    func updateFirmware(version: VersionModel, block: BlockModel, FW: [UInt8], success: @escaping BLERequest.Success, failure: @escaping BLERequest.Failure) {
         
         let command = UpdateFirmware(version: version, block: block, FW: FW)
         
-        peripheralManager.updateFW(command: command, success: {
-            success()
+        peripheralManager.updateFW(command: command, success: { resp in
+            success(resp)
         }, failure: failure)
     }
     
