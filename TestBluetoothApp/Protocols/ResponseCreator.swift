@@ -27,6 +27,14 @@ extension ResponseCreator {
         switch commandSecondByte {
         case CommandsU16.readParameters.secondByte:
             return try ResponseReadParameters(from: data)
+        case CommandsU16.updateFirmware.secondByte:
+            return try ResponseUpdateFirmware(from: data)
+        case CommandsU16.confirmationUpdate.secondByte:
+            return ResponseConfirmationUpdate(from: data)
+        case CommandsU16.writeRulesOfSample.secondByte:
+            return try ResponseWriteRulesOfSample(from: data)
+        case CommandsU16.writeRulesOfSoundPackageMode.secondByte:
+            return try ResponseWriteRulesOfSoundPackageMode(from: data)
         case CommandsU16.deleteSound.secondByte:
             return ResponseDeleteSound(from: data)
         case CommandsU16.startPlaySample.secondByte:
@@ -47,6 +55,8 @@ extension ResponseCreator {
             return ResponseMuteOff(from: data)
         case CommandsU16.readCAN.secondByte:
             return try ResponseReadCAN(from: data)
+        case CommandsU16.writeCAN.secondByte:
+            return try ResponseWriteCAN(from: data)
         case CommandsU16.poyling.secondByte:
             return try ResponsePoyling(from: data)
         default:

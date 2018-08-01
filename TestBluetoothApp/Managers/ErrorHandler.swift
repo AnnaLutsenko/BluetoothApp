@@ -10,6 +10,7 @@ import Foundation
 
 
 enum RequestError: Error {
+    case firmwareNotDownloaded
     case wrongData
     case unexpectedResponse
     case dataNotComplete
@@ -30,8 +31,8 @@ enum PeripheralError: UInt16, Error {
     
     case firmwareNotInstalled       = 0x8051 // 3
     case soundNotWriting            = 0x8040 // 4.1
-    case rulesOfSoundNotWriting     = 0x0042 // 4.3
-    case rulesOfSampleNotWriting    = 0x8043 // 4.4
+    case rulesOfSampleNotWriting    = 0x8042 // 4.3
+    case rulesOfSoundNotWriting     = 0x8043 // 4.4
     case deviceIsNotReady           = 0x8044 // 4.5
     
     case audioIsNotInstalled        = 0x8046 // 5
@@ -46,7 +47,7 @@ enum PeripheralError: UInt16, Error {
     case notInMute                  = 0x8049 // 13
     
     case readOfCANFailed            = 0x804A // 14
-    case parametersNotSetToCAN      = 0x804B // 15
+    case deviceCanNotSetParameters  = 0x804B // 15
     
     static func error(with code: UInt16) -> Error {
         return PeripheralError(rawValue: code) ?? RequestError.unexpectedResponse
@@ -84,7 +85,7 @@ enum PeripheralError: UInt16, Error {
             return "The device can not execute a command (not in MUTE)"
         case .readOfCANFailed:
             return "The CAN configuration on the device failed"
-        case .parametersNotSetToCAN:
+        case .deviceCanNotSetParameters:
             return "The device can not set CAN parameters"
         }
     }

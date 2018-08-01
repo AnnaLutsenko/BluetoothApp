@@ -8,6 +8,7 @@
 
 import UIKit
 
+//MARK: - UInt16 array
 extension Array where Element == UInt16 {
     
     func convertToUInt8() -> [UInt8] {
@@ -23,16 +24,17 @@ extension Array where Element == UInt16 {
     }
 }
 
+//MARK: - UInt8 array
 extension Array where Element == UInt8 {
     
     func toDataWithCRC() -> Data {
-        let dataInCRC16 = CRC16.crc16(self, type: .MODBUS)
+        guard let dataInCRC16 = CRC16.crc16(self, type: .MODBUS) else {return Data()}
         
-        if dataInCRC16 != nil {
-            let modbusStr = String(format: "0x%4X", dataInCRC16!)
-            print("MODBUS = " + modbusStr)
-        }
-        guard let crc16InUInt8 = dataInCRC16?.convertToUInt8() else {return Data()}
+        //String(format: "%04X", dataInCRC16!)
+        let modbusStr = dataInCRC16.convertToUInt8().convertToHEX()
+        print("MODBUS = \(modbusStr)")
+        
+        let crc16InUInt8 = dataInCRC16.convertToUInt8()
         //
         var dataToSend = self
         dataToSend.append(crc16InUInt8[0])

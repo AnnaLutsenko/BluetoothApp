@@ -11,8 +11,45 @@ import Foundation
 class BLERequestManager {
     private unowned let peripheralManager: PeripheralManager
     
+    /// Manager for updating firmware on peripheral
+    private let firmwareManager = FirmwareManager()
+    
+    private (set) var peripheralModel: PeripheralModel?
+    private (set) var firmwareData: Data?
+    
     init(peripheralManager: PeripheralManager) {
         self.peripheralManager = peripheralManager
+    }
+    
+    // MARK: - Firmware
+    func getNewFirmware(success: @escaping FirmwareManager.Success, failure: @escaping FirmwareManager.Failure) {
+        
+        firmwareManager.getFirmware(success: { data in
+            print("Successfull getting firmware!")
+            self.firmwareData = data
+            success(data)
+        }, failure: failure)
+    }
+    
+    func updateFirmware(version: VersionModel, block: BlockModel, FW: [UInt8], success: @escaping BLERequest.Success, failure: @escaping BLERequest.Failure) {
+        
+        let command = UpdateFirmware(version: version, block: block, FW: FW)
+        
+        peripheralManager.updateFW(command: command, success: { resp in
+            success(resp)
+        }, failure: failure)
+    }
+    
+    func confirmationUpdate(device: DeviceType, version: VersionModel, success: @escaping ((ResponseConfirmationUpdate) -> Void), failure: @escaping FirmwareManager.Failure) {
+        
+        peripheralManager.run(command: ConfirmationUpdate(device: device, version: version), success: { (commandResponse) in
+            guard let resp = commandResponse as? ResponseConfirmationUpdate else {
+                failure(RequestError.unexpectedResponse)
+                return
+            }
+            
+            success(resp)
+        }, failure: failure)
     }
     
     func selectCurrentPreset(id: UInt16, success: @escaping ((ResponseSelectCurrentPreset) -> Void), failure: @escaping BLERequest.Failure) {
@@ -39,9 +76,9 @@ class BLERequestManager {
         }, failure: failure)
     }
     
-    func startPlaySound(id: [UInt16], success: @escaping ((ResponseStartPlaySound) -> Void), failure: @escaping BLERequest.Failure) {
+    func startPlaySound(sound: SoundModel, success: @escaping ((ResponseStartPlaySound) -> Void), failure: @escaping BLERequest.Failure) {
         
-        peripheralManager.run(command: StartPlaySound(soundID: id), success: { (commandResponse) in
+        peripheralManager.run(command: StartPlaySound(sound: sound), success: { (commandResponse) in
             guard let resp = commandResponse as? ResponseStartPlaySound else {
                 failure(RequestError.unexpectedResponse)
                 return
@@ -107,6 +144,7 @@ class BLERequestManager {
                 failure(RequestError.unexpectedResponse)
                 return
             }
+            self.peripheralModel = resp.peripheral
             success(resp)
             
         }) { (error) in
@@ -123,6 +161,42 @@ class BLERequestManager {
             }
             
             completion(resp)
+        }, failure: failure)
+    }
+    
+    func writeCAN(_ can: CAN_Model, paramID: UInt16, rules: [RuleModel], success: @escaping ((ResponseWriteCAN) -> Void), failure: @escaping BLERequest.Failure) {
+        
+        peripheralManager.run(command: WriteCAN(CAN: can, paramID: paramID, rules: rules), success: { (commandResponse) in
+            guard let resp = commandResponse as? ResponseWriteCAN else {
+                failure(RequestError.unexpectedResponse)
+                return
+            }
+            
+            success(resp)
+        }, failure: failure)
+    }
+    
+    func writeRulesOfSample(sample: SampleModel, rules: [RuleModel], success: @escaping ((ResponseWriteRulesOfSample) -> Void), failure: @escaping BLERequest.Failure) {
+        
+        peripheralManager.run(command: WriteRulesOfSample(sample: sample, rules: rules), success: { (commandResponse) in
+            guard let resp = commandResponse as? ResponseWriteRulesOfSample else {
+                failure(RequestError.unexpectedResponse)
+                return
+            }
+            
+            success(resp)
+        }, failure: failure)
+    }
+    
+    func writeRulesOfSoundPackageMode(soundPackage: SoundPackageModel, rules: [RuleModel], success: @escaping ((ResponseWriteRulesOfSoundPackageMode) -> Void), failure: @escaping BLERequest.Failure) {
+        
+        peripheralManager.run(command: WriteRulesOfSoundPackageMode(soundPackage: soundPackage, rules: rules), success: { (commandResponse) in
+            guard let resp = commandResponse as? ResponseWriteRulesOfSoundPackageMode else {
+                failure(RequestError.unexpectedResponse)
+                return
+            }
+            
+            success(resp)
         }, failure: failure)
     }
     

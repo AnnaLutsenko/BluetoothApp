@@ -36,7 +36,6 @@ class PeripheralConnectedViewController: UIViewController, StoryboardInstance {
         peripheralNameLbl.text = peripheral.name
         //        rssiReloadTimer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(refreshRSSI), userInfo: nil, repeats: true)
         //
-        peripheralManager?.getNewFirmware()
     }
     
     @objc private func refreshRSSI(){
@@ -47,23 +46,70 @@ class PeripheralConnectedViewController: UIViewController, StoryboardInstance {
         return (peripheral.state == .connected)
     }
     
+    // MARK: - Update Firmware
+    func confirmUpdate() {
+        peripheralManager?.bleRequestManager.confirmationUpdate(device: .main, version: VersionModel(firmware: UInt16(1), hardware: UInt16(1)), success: { (resp) in
+            debugPrint("---- Success confirmation Update ----")
+            debugPrint(resp)
+        }, failure: { (error) in
+            debugPrint(error.localizedDescription)
+        })
+    }
     
-    func writeValueToPeripheral(_ val: [UInt8]) {
-        let dataInCRC16 = CRC16.crc16(val, type: .MODBUS)
+    func nextBlock(i: Int) {
         
-        if dataInCRC16 != nil {
-            let modbusStr = String(format: "0x%4X", dataInCRC16!)
-            print("MODBUS = " + modbusStr)
+        guard let data = peripheralManager?.bleRequestManager.firmwareData else {
+            return
         }
-        guard let crc16InUInt8 = dataInCRC16?.convertToUInt8() else {return}
-        //
-        let dataToSend = val + [crc16InUInt8[0], crc16InUInt8[1]]
-        let nsData = NSData(bytes: dataToSend, length: dataToSend.count) as Data
-        //
-        peripheral.writeValue(nsData,  for: arrayReadWriteChar[0], type: .withoutResponse)
+        
+        let version = VersionModel(firmware: UInt16(1), hardware: UInt16(1))
+        var dataInU8 = [UInt8](data)
+        var arrOfBlock: [[UInt8]] = []
+        
+        while !dataInU8.isEmpty {
+            let n = dataInU8.count >= 64 ? 64 : dataInU8.count
+            //
+            let block = Array(dataInU8.prefix(n))
+            arrOfBlock.append(block)
+            dataInU8.removeFirst(n)
+        }
+        
+        if arrOfBlock.count != i {
+            let blockSent = BlockModel(count: UInt16(arrOfBlock.count), currentNumber: UInt16(i+1))
+            sendCommandFW(version: version, block: blockSent, fw: arrOfBlock[i])
+        } else {
+            debugPrint(" ------ Update FW finished! ------")
+            confirmUpdate()
+        }
+    }
+    
+    func sendCommandFW(version: VersionModel, block: BlockModel, fw: [UInt8]) {
+        peripheralManager?.bleRequestManager.updateFirmware(version: version, block: block, FW: fw, success: { resp in
+            print("Sent block \(block)")
+            self.nextBlock(i: Int(block.currentNumber))
+        }, failure: { (error) in
+            print(error.localizedDescription)
+        })
     }
     
     //MARK: Actions
+    @IBAction func downloadFirmware(_ sender: UIButton) {
+        
+        peripheralManager?.bleRequestManager.getNewFirmware(success: { (data) in
+            debugPrint("New firmware was download: \(data)")
+        }, failure: { (error) in
+            debugPrint(error.localizedDescription)
+        })
+    }
+    
+    @IBAction func updateFirmware(_ sender: UIButton) {
+       nextBlock(i: 0)
+    }
+    
+    @IBAction func confirmationUpdate(_ sender: UIButton) {
+        confirmUpdate()
+    }
+    
     @IBAction func readIDSound() {
         
         peripheralManager?.bleRequestManager.readIDSounds(completion: { (resp) in
@@ -86,8 +132,9 @@ class PeripheralConnectedViewController: UIViewController, StoryboardInstance {
     
     
     @IBAction func startPlaySound() {
-        
-        peripheralManager?.bleRequestManager.startPlaySound(id: [UInt16(8), UInt16(44)], success: { (resp) in
+        let sound = SoundModel(id: UInt16(8), versionID: UInt16(44))
+        //
+        peripheralManager?.bleRequestManager.startPlaySound(sound: sound, success: { (resp) in
             debugPrint("---- Success start playing sound ----")
             debugPrint(resp)
         }, failure: { (error) in
@@ -172,6 +219,47 @@ class PeripheralConnectedViewController: UIViewController, StoryboardInstance {
         })
     }
     
+    @IBAction func writeCAN(_ sender: UIButton) {
+        let can = CAN_Model(id: UInt16(0), versionID: UInt16(0))
+        let param: UInt16 = 0x0000
+        let rules = [RuleModel(id: UInt16(0x0003), means: UInt16(1))]
+        //
+        peripheralManager?.bleRequestManager.writeCAN(can, paramID: param, rules: rules, success: { (resp) in
+            debugPrint("---- Successful Write CAN ----")
+            debugPrint(resp)
+        }, failure: { (error) in
+            debugPrint(error.localizedDescription)
+        })
+    }
+    
+    @IBAction func writeRulesOfSample(_ sender: UIButton) {
+        //
+        let sound = SoundModel(id: UInt16(0), versionID: UInt16(0))
+        let sample = SampleModel(sound: sound, id: UInt16(3))
+        let rules = [RuleModel(id: UInt16(0x0007), means: UInt16(50))]
+        //
+        peripheralManager?.bleRequestManager.writeRulesOfSample(sample: sample, rules: rules, success: { (resp) in
+            debugPrint("---- Successful writeRulesOf Sample ----")
+            debugPrint(resp)
+        }, failure: { (error) in
+            debugPrint(error.localizedDescription)
+        })
+    }
+    
+    @IBAction func writeRulesOfSoundPackageMode(_ sender: UIButton) {
+        //
+        let sound = SoundModel(id: UInt16(0), versionID: UInt16(0))
+        let soundPack = SoundPackageModel(sound: sound, modeID: UInt16(3))
+        let rules = [RuleModel(id: UInt16(0x0000), means: UInt16(50))]
+        //
+        peripheralManager?.bleRequestManager.writeRulesOfSoundPackageMode(soundPackage: soundPack, rules: rules, success: { (resp) in
+            debugPrint("---- Successful writeRulesOfSoundPackageMode ----")
+            debugPrint(resp)
+        }, failure: { (error) in
+            debugPrint(error.localizedDescription)
+        })
+    }
+    
     @IBAction func poyling(_ sender: UIButton) {
         peripheralManager?.bleRequestManager.poyling(success: { (resp) in
             debugPrint("---- Successful Poyling ----")
@@ -185,7 +273,7 @@ class PeripheralConnectedViewController: UIViewController, StoryboardInstance {
 
 /*
 extension PeripheralConnectedViewController: CBPeripheralDelegate {
-    
+ 
     func peripheral(_ peripheral: CBPeripheral, didReadRSSI RSSI: NSNumber, error: Error?) {
         switch RSSI.intValue {
         case -90 ... -60:
@@ -197,7 +285,7 @@ extension PeripheralConnectedViewController: CBPeripheralDelegate {
         default:
             rssiLbl.textColor = .btGreen
         }
-        
+ 
         rssiLbl.text = "\(RSSI) dB"
     }
 }

@@ -18,6 +18,9 @@ class FirmwareManager {
     private let fileURL = "http://4k.com.ua/thor/program-v27.bin"
     private var destinationFilePath: URL?
     
+    deinit {
+        print(" - FirmwareManager was deinit - ")
+    }
     
     func getFirmware(success: @escaping Success, failure: @escaping Failure) {
         
